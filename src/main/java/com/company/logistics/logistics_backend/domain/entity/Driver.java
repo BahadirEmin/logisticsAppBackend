@@ -7,7 +7,8 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "driver")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -18,14 +19,33 @@ public class Driver {
     @Column(name = "driver_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "personnel_id", unique = true)
-    private Personnel personnel;
+    @Column(nullable = false)
+    private String firstName;
 
+    @Column(nullable = false)
+    private String lastName;
+
+    @Column(unique = true, nullable = false)
     private String licenseNo;
+
+    @Column(nullable = false)
     private String licenseClass;
 
+    @Column(nullable = false)
     private LocalDate passportExpiry;
+
+    @Column(nullable = false)
     private LocalDate visaExpiry;
+
+    @Column(nullable = false)
     private LocalDate residencePermitExpiry;
+
+    @Column(nullable = false)
+    private String phoneNumber;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Builder.Default
+    private Boolean isActive = true;
 }
