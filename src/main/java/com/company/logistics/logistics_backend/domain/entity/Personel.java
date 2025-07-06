@@ -6,16 +6,16 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "personnel")
+@Table(name = "personel")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Personnel {
+public class Personel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "personnel_id")
+    @Column(name = "personel_id")
     private Long id;
 
     private String firstName;
