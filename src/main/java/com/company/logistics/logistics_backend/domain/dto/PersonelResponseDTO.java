@@ -11,12 +11,14 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DriverDTO {
+public class PersonelResponseDTO {
     private Long id;
-    private Long personelId;
-    private String licenseNo;
-    private String licenseClass;
-    private LocalDate passportExpiry;
-    private LocalDate visaExpiry;
-    private LocalDate residencePermitExpiry;
+    private String firstName;
+    private String lastName;
+    private String role;
+    private String department;
+    private LocalDate hireDate;
+    private String email;
+    private String phone;
+    private Boolean isActive;
 }
