@@ -20,7 +20,7 @@ public class Personel {
 
     private String firstName;
     private String lastName;
-    private String role; // Görev / Unvan
+    private String role; // Görev / Unvan // satışçı Operasyoncu Admin 
     private String department;
     private LocalDate hireDate;
 
