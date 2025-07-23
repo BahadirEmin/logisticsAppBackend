@@ -1,0 +1,16 @@
+services:
+  logisticdb:
+    image: postgres:16
+    container_name: logisticdb
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: logisticdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - logisticdb:/var/lib/postgres/data
+
+volumes:
+  logisticdb:
