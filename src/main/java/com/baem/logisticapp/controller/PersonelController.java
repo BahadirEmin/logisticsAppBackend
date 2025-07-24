@@ -3,7 +3,7 @@ package com.baem.logisticapp.controller;
 import com.baem.logisticapp.dto.PersonelCreateDTO;
 import com.baem.logisticapp.dto.PersonelResponseDTO;
 import com.baem.logisticapp.dto.PersonelUpdateDTO;
-import com.baem.logisticapp.service.PersonelService;
+import com.baem.logisticapp.service.PersonalService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PersonelController {
 
-    private final PersonelService personelService;
+    private final PersonalService personelService;
 
     @PostMapping
     public ResponseEntity<PersonelResponseDTO> createPersonel(@Valid @RequestBody PersonelCreateDTO personelCreateDTO) {

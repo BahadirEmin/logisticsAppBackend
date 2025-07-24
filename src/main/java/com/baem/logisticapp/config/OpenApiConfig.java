@@ -1,28 +1,49 @@
 package com.baem.logisticapp.config;
 
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.Contact;
-import io.swagger.v3.oas.models.info.License;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.servers.Server;
 
-@Configuration
+@OpenAPIDefinition(
+
+        info = @io.swagger.v3.oas.annotations.info.Info(
+                contact = @io.swagger.v3.oas.annotations.info.Contact(
+                        name = "BAEM",
+                        email = "beminustun2@gmail.com",
+                        url = "http://images.paramount.tech/path/mgid:file:gsp:entertainment-assets:/sps/shared/characters/kids/eric-cartman.png?height=165"
+                ),
+                description = "OpenAPI documentation for logistics app.",
+                title = "OpenAPI Specification - BAEM",
+                version = "1.0",
+                license = @io.swagger.v3.oas.annotations.info.License(
+                        name = "MIT License",
+                        url = "https://opensource.org/licenses/MIT"
+                ),
+                termsOfService = "Terms of service"
+        ),
+        servers = {
+                @Server(
+                        description = "Local ENV",
+                        url = "http://localhost:8080"
+                )
+        },
+        security = {
+                @SecurityRequirement(
+                        name = "bearerAuth"
+                )
+        }
+)
+@SecurityScheme(
+        name = "bearerAuth",
+        description = "JWT auth description",
+        scheme = "bearer",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        in = SecuritySchemeIn.HEADER
+)
 public class OpenApiConfig {
 
-    @Bean
-    public OpenAPI logisticsOpenAPI() {
-        return new OpenAPI()
-                .info(new Info()
-                        .title("Lojistik Firması API")
-                        .description("Lojistik firması için geliştirilen REST API servisleri")
-                        .version("v1.0.0")
-                        .contact(new Contact()
-                                .name("Lojistik Firması")
-                                .email("info@lojistikfirmasi.com")
-                                .url("https://www.lojistikfirmasi.com"))
-                        .license(new License()
-                                .name("Apache 2.0")
-                                .url("http://www.apache.org/licenses/LICENSE-2.0.html")));
-    }
 }

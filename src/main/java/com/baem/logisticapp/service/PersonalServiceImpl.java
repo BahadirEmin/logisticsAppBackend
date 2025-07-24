@@ -4,8 +4,8 @@ import com.baem.logisticapp.dto.PersonelCreateDTO;
 import com.baem.logisticapp.dto.PersonelResponseDTO;
 import com.baem.logisticapp.dto.PersonelUpdateDTO;
 import com.baem.logisticapp.entity.Personel;
-import com.baem.logisticapp.repository.PersonelRepository;
 import com.baem.logisticapp.exception.ResourceNotFoundException;
+import com.baem.logisticapp.repository.PersonelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PersonelService {
+public class PersonalServiceImpl implements PersonalService {
 
     private final PersonelRepository personelRepository;
 
