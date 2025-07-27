@@ -1,0 +1,155 @@
+package com.baem.logisticapp.service;
+
+import com.baem.logisticapp.dto.CustomerCreateDTO;
+import com.baem.logisticapp.dto.CustomerResponseDTO;
+import com.baem.logisticapp.dto.CustomerUpdateDTO;
+import com.baem.logisticapp.entity.Customer;
+import com.baem.logisticapp.entity.CustomerRiskStatus;
+import com.baem.logisticapp.repository.CustomerRepository;
+import com.baem.logisticapp.repository.CustomerRiskStatusRepository;
+import com.baem.logisticapp.exception.ResourceNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class CustomerServiceImpl implements CustomerService {
+
+    private final CustomerRepository customerRepository;
+    private final CustomerRiskStatusRepository customerRiskStatusRepository;
+
+    @Override
+    public CustomerResponseDTO createCustomer(CustomerCreateDTO createDTO) {
+        // Check if customer with same tax number already exists
+        if (customerRepository.existsByTaxNo(createDTO.getTaxNo())) {
+            throw new IllegalArgumentException("Customer with tax number " + createDTO.getTaxNo() + " already exists");
+        }
+
+        // Get risk status
+        CustomerRiskStatus riskStatus = customerRiskStatusRepository.findById(createDTO.getRiskStatusId())
+                .orElseThrow(() -> new ResourceNotFoundException("Risk status not found"));
+
+        Customer customer = Customer.builder()
+                .name(createDTO.getName())
+                .taxNo(createDTO.getTaxNo())
+                .riskStatus(riskStatus)
+                .isBlacklisted(createDTO.getIsBlacklisted() != null ? createDTO.getIsBlacklisted() : false)
+                .isInLawsuit(createDTO.getIsInLawsuit() != null ? createDTO.getIsInLawsuit() : false)
+                .creditLimit(createDTO.getCreditLimit())
+                .build();
+
+        return convertToDTO(customerRepository.save(customer));
+    }
+
+    @Override
+    public CustomerResponseDTO getCustomerById(Long id) {
+        return customerRepository.findById(id)
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+    }
+
+    @Override
+    public List<CustomerResponseDTO> getAllCustomers() {
+        return customerRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    @Override
+    public CustomerResponseDTO updateCustomer(Long id, CustomerUpdateDTO updateDTO) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+
+        // Check if tax number is being changed and if it already exists
+        if (!customer.getTaxNo().equals(updateDTO.getTaxNo()) &&
+                customerRepository.existsByTaxNo(updateDTO.getTaxNo())) {
+            throw new IllegalArgumentException("Customer with tax number " + updateDTO.getTaxNo() + " already exists");
+        }
+
+        // Get risk status
+        CustomerRiskStatus riskStatus = customerRiskStatusRepository.findById(updateDTO.getRiskStatusId())
+                .orElseThrow(() -> new ResourceNotFoundException("Risk status not found"));
+
+        customer.setName(updateDTO.getName());
+        customer.setTaxNo(updateDTO.getTaxNo());
+        customer.setRiskStatus(riskStatus);
+        customer.setIsBlacklisted(updateDTO.getIsBlacklisted() != null ? updateDTO.getIsBlacklisted() : false);
+        customer.setIsInLawsuit(updateDTO.getIsInLawsuit() != null ? updateDTO.getIsInLawsuit() : false);
+        customer.setCreditLimit(updateDTO.getCreditLimit());
+
+        return convertToDTO(customerRepository.save(customer));
+    }
+
+    @Override
+    public void deleteCustomer(Long id) {
+        if (!customerRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Customer not found");
+        }
+        customerRepository.deleteById(id);
+    }
+
+    @Override
+    public List<CustomerResponseDTO> getCustomersByRiskStatus(Long riskStatusId) {
+        return customerRepository.findByRiskStatusId(riskStatusId).stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    @Override
+    public List<CustomerResponseDTO> getBlacklistedCustomers() {
+        return customerRepository.findByIsBlacklistedTrue().stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    @Override
+    public List<CustomerResponseDTO> getCustomersInLawsuit() {
+        return customerRepository.findByIsInLawsuitTrue().stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    @Override
+    public CustomerResponseDTO getCustomerByTaxNo(String taxNo) {
+        return customerRepository.findByTaxNo(taxNo)
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+    }
+
+    @Override
+    public List<CustomerResponseDTO> searchCustomersByName(String name) {
+        return customerRepository.findByNameContainingIgnoreCase(name).stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    @Override
+    public List<CustomerResponseDTO> getBlacklistedCustomersByRiskStatus(Long riskStatusId) {
+        return customerRepository.findByRiskStatusIdAndIsBlacklistedTrue(riskStatusId).stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    @Override
+    public List<CustomerResponseDTO> getCustomersInLawsuitByRiskStatus(Long riskStatusId) {
+        return customerRepository.findByRiskStatusIdAndIsInLawsuitTrue(riskStatusId).stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    private CustomerResponseDTO convertToDTO(Customer customer) {
+        return CustomerResponseDTO.builder()
+                .id(customer.getId())
+                .name(customer.getName())
+                .taxNo(customer.getTaxNo())
+                .riskStatusId(customer.getRiskStatus().getId())
+                .riskStatusName(customer.getRiskStatus().getStatusName())
+                .isBlacklisted(customer.getIsBlacklisted())
+                .isInLawsuit(customer.getIsInLawsuit())
+                .creditLimit(customer.getCreditLimit())
+                .createdAt(customer.getCreatedAt())
+                .build();
+    }
+}
