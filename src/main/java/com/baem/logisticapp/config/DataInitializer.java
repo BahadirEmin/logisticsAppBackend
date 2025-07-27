@@ -45,6 +45,15 @@ public class DataInitializer {
                     .role(Role.OPERATION)
                     .build());
         }
+        if (userRepository.findByUsername("fleet").isEmpty()) {
+            userRepository.save(User.builder()
+                    .username("fleet")
+                    .name("Filo Yöneticisi")
+                    .email("fleet@logistics.com")
+                    .password(passwordEncoder.encode("fleet123"))
+                    .role(Role.FLEET)
+                    .build());
+        }
         if (userRepository.findByUsername("admin").isEmpty()) {
             userRepository.save(User.builder()
                     .username("admin")

@@ -7,6 +7,7 @@
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/controller/CustomerController.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/controller/CustomerRiskStatusController.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/controller/DriverController.java
+/Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/controller/OrderController.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/controller/PersonelController.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/controller/TestController.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/controller/TrailerController.java
@@ -23,6 +24,9 @@
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/dto/DriverDTO.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/dto/DriverResponseDTO.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/dto/DriverUpdateDTO.java
+/Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/dto/OrderCreateDTO.java
+/Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/dto/OrderResponseDTO.java
+/Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/dto/OrderUpdateDTO.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/dto/PersonelCreateDTO.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/dto/PersonelResponseDTO.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/dto/PersonelUpdateDTO.java
@@ -37,10 +41,12 @@
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/entity/Customer.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/entity/CustomerRiskStatus.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/entity/Driver.java
+/Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/entity/Order.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/entity/Personel.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/entity/Role.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/entity/TestEntity.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/entity/Trailer.java
+/Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/entity/TripStatus.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/entity/User.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/entity/Vehicle.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/entity/VehicleOwnershipType.java
@@ -48,6 +54,7 @@
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/repository/CustomerRepository.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/repository/CustomerRiskStatusRepository.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/repository/DriverRepository.java
+/Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/repository/OrderRepository.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/repository/PersonelRepository.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/repository/TestRepository.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/repository/TrailerRepository.java
@@ -63,6 +70,8 @@
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/service/CustomerServiceImpl.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/service/DriverService.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/service/DriverServiceImpl.java
+/Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/service/OrderService.java
+/Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/service/OrderServiceImpl.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/service/PersonalService.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/service/PersonalServiceImpl.java
 /Users/bahadirtemel/codes/logisticsAppCursor/logisticsAppBackend/src/main/java/com/baem/logisticapp/service/TrailerService.java
