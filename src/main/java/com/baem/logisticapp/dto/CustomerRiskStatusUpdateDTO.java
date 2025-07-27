@@ -1,5 +1,6 @@
 package com.baem.logisticapp.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthResponse {
-    private String token;
-    private UserResponseDTO user;
+public class CustomerRiskStatusUpdateDTO {
+    @NotBlank(message = "Status name is required")
+    private String statusName;
 }

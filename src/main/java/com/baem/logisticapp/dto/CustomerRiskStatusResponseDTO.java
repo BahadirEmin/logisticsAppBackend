@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthResponse {
-    private String token;
-    private UserResponseDTO user;
+public class CustomerRiskStatusResponseDTO {
+    private Long id;
+    private String statusName;
 }

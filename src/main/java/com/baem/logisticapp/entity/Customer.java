@@ -20,7 +20,12 @@ public class Customer {
     private Long id;
 
     private String name; // Ünvan
-    private String taxNo;
+    private String taxNo; // Nullable
+
+    // Contact Information
+    private String contactName; // Ulaşılacak kişi adı
+    private String phoneNumber; // Telefon numarası
+    private String address; // Adres
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "risk_status_id")
@@ -32,7 +37,7 @@ public class Customer {
     @Builder.Default
     private Boolean isInLawsuit = false;
 
-    private BigDecimal creditLimit;
+    private BigDecimal creditLimit; // Nullable
 
     @Builder.Default
     private OffsetDateTime createdAt = OffsetDateTime.now();

@@ -1,5 +1,6 @@
 package com.baem.logisticapp.dto;
 
+import com.baem.logisticapp.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthResponse {
-    private String token;
-    private UserResponseDTO user;
+public class UserResponseDTO {
+    private Long id;
+    private String username;
+    private String name;
+    private String email;
+    private Role role;
 }
