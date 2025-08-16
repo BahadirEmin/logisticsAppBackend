@@ -17,8 +17,12 @@ public class CustomerUpdateDTO {
     @NotBlank(message = "Customer name is required")
     private String name;
 
-    @NotBlank(message = "Tax number is required")
-    private String taxNo;
+    private String taxNo; // Nullable
+
+    // Contact Information
+    private String contactName; // Ulaşılacak kişi adı
+    private String phoneNumber; // Telefon numarası
+    private String address; // Adres
 
     @NotNull(message = "Risk status is required")
     private Long riskStatusId;
@@ -27,5 +31,5 @@ public class CustomerUpdateDTO {
 
     private Boolean isInLawsuit;
 
-    private BigDecimal creditLimit;
+    private BigDecimal creditLimit; // Nullable
 }

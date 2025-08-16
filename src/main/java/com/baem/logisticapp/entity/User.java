@@ -18,6 +18,9 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
+    private String name; // Kullanıcı adı
+    private String email; // Email adresi
+
     @Column(nullable = false)
     private String password;
 

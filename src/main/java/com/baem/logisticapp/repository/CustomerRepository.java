@@ -28,6 +28,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     // Tax number ile müşteri var mı kontrol etme
     boolean existsByTaxNo(String taxNo);
 
+    // Tax number ile müşteri var mı kontrol etme (null-safe)
+    default boolean existsByTaxNoSafe(String taxNo) {
+        return taxNo != null && !taxNo.trim().isEmpty() && existsByTaxNo(taxNo);
+    }
+
     // Risk durumu ve kara liste durumuna göre müşterileri bulma
     List<Customer> findByRiskStatusIdAndIsBlacklistedTrue(Long riskStatusId);
 

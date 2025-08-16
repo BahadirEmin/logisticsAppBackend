@@ -16,6 +16,12 @@ public class CustomerResponseDTO {
     private Long id;
     private String name;
     private String taxNo;
+
+    // Contact Information
+    private String contactName; // Ulaşılacak kişi adı
+    private String phoneNumber; // Telefon numarası
+    private String address; // Adres
+
     private Long riskStatusId;
     private String riskStatusName;
     private Boolean isBlacklisted;
