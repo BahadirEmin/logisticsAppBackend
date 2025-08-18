@@ -133,11 +133,46 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<OrderResponseDTO> getOrdersByFleetPersonId(Long fleetPersonId) {
+        return orderRepository.findByFleetPersonId(fleetPersonId).stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    @Override
     public List<OrderResponseDTO> getOrdersByTripStatus(String tripStatus) {
         TripStatus status = TripStatus.valueOf(tripStatus.toUpperCase());
         return orderRepository.findByTripStatus(status).stream()
                 .map(this::convertToDTO)
                 .toList();
+    }
+
+    @Override
+    public OrderResponseDTO assignToOperation(Long orderId, Long operationPersonId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        Personel operationPerson = personelRepository.findById(operationPersonId)
+                .orElseThrow(() -> new ResourceNotFoundException("Operation person not found"));
+
+        order.setOperationPerson(operationPerson);
+        order.setUpdatedAt(OffsetDateTime.now());
+
+        return convertToDTO(orderRepository.save(order));
+    }
+
+    @Override
+    public OrderResponseDTO assignToFleet(Long orderId, Long fleetPersonId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        Personel fleetPerson = personelRepository.findById(fleetPersonId)
+                .orElseThrow(() -> new ResourceNotFoundException("Fleet person not found"));
+
+        order.setFleetPerson(fleetPerson);
+        order.setUpdatedAt(OffsetDateTime.now());
+
+        return convertToDTO(orderRepository.save(order));
     }
 
     private void updateOrderFields(Order order, OrderUpdateDTO updateDTO) {

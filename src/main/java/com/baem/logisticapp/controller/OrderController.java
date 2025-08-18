@@ -57,8 +57,27 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrdersBySalesPersonId(salesPersonId));
     }
 
+    @GetMapping("/fleet-person/{fleetPersonId}")
+    public ResponseEntity<List<OrderResponseDTO>> getOrdersByFleetPersonId(@PathVariable Long fleetPersonId) {
+        return ResponseEntity.ok(orderService.getOrdersByFleetPersonId(fleetPersonId));
+    }
+
     @GetMapping("/status/{tripStatus}")
     public ResponseEntity<List<OrderResponseDTO>> getOrdersByTripStatus(@PathVariable String tripStatus) {
         return ResponseEntity.ok(orderService.getOrdersByTripStatus(tripStatus));
+    }
+
+    @PostMapping("/{orderId}/assign-operation")
+    public ResponseEntity<OrderResponseDTO> assignToOperation(
+            @PathVariable Long orderId,
+            @RequestParam Long operationPersonId) {
+        return ResponseEntity.ok(orderService.assignToOperation(orderId, operationPersonId));
+    }
+
+    @PostMapping("/{orderId}/assign-fleet")
+    public ResponseEntity<OrderResponseDTO> assignToFleet(
+            @PathVariable Long orderId,
+            @RequestParam Long fleetPersonId) {
+        return ResponseEntity.ok(orderService.assignToFleet(orderId, fleetPersonId));
     }
 }
