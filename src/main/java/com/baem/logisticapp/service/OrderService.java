@@ -22,5 +22,11 @@ public interface OrderService {
 
     List<OrderResponseDTO> getOrdersBySalesPersonId(Long salesPersonId);
 
+    List<OrderResponseDTO> getOrdersByFleetPersonId(Long fleetPersonId);
+
     List<OrderResponseDTO> getOrdersByTripStatus(String tripStatus);
+
+    OrderResponseDTO assignToOperation(Long orderId, Long operationPersonId);
+
+    OrderResponseDTO assignToFleet(Long orderId, Long fleetPersonId);
 }

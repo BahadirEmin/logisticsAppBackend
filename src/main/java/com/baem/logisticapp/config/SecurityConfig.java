@@ -33,10 +33,10 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/login",
                                 "/swagger-ui.html", "/swagger-ui/**",
-                                "/v3/api-docs/**", "/api-docs/**")
+                                "/v3/api-docs/**", "/api-docs/**",
+                                "/api/v1/orders/**", // Temporary for Swagger testing
+                                "/api/v1/customers/**") // Temporary for Swagger testing
                         .permitAll()
-                        .requestMatchers("/api/v1/customers/**").hasAnyRole("SALES", "OPERATION", "FLEET", "ADMIN")
-                        .requestMatchers("/api/v1/orders/**").hasAnyRole("SALES", "OPERATION", "FLEET", "ADMIN")
                         .requestMatchers("/api/v1/vehicles/**").hasAnyRole("FLEET", "ADMIN")
                         .requestMatchers("/api/v1/trailers/**").hasAnyRole("FLEET", "ADMIN")
                         .anyRequest().authenticated())
