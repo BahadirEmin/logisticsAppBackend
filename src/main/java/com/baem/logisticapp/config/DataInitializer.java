@@ -3,8 +3,10 @@ package com.baem.logisticapp.config;
 import com.baem.logisticapp.entity.CustomerRiskStatus;
 import com.baem.logisticapp.entity.Role;
 import com.baem.logisticapp.entity.User;
+import com.baem.logisticapp.entity.VehicleOwnershipType;
 import com.baem.logisticapp.repository.CustomerRiskStatusRepository;
 import com.baem.logisticapp.repository.UserRepository;
+import com.baem.logisticapp.repository.VehicleOwnershipTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class DataInitializer {
     private final UserRepository userRepository;
     private final CustomerRiskStatusRepository customerRiskStatusRepository;
+    private final VehicleOwnershipTypeRepository vehicleOwnershipTypeRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Bean
@@ -23,6 +26,7 @@ public class DataInitializer {
         return args -> {
             initUsers();
             initRiskStatuses();
+            initVehicleOwnershipTypes();
         };
     }
 
@@ -78,6 +82,20 @@ public class DataInitializer {
                     .build());
             customerRiskStatusRepository.save(CustomerRiskStatus.builder()
                     .statusName("Kara Liste")
+                    .build());
+        }
+    }
+
+    private void initVehicleOwnershipTypes() {
+        if (vehicleOwnershipTypeRepository.count() == 0) {
+            vehicleOwnershipTypeRepository.save(VehicleOwnershipType.builder()
+                    .ownershipName("Özmal")
+                    .build());
+            vehicleOwnershipTypeRepository.save(VehicleOwnershipType.builder()
+                    .ownershipName("Kiralık")
+                    .build());
+            vehicleOwnershipTypeRepository.save(VehicleOwnershipType.builder()
+                    .ownershipName("Spedisyon")
                     .build());
         }
     }
