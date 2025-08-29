@@ -97,15 +97,15 @@ public class Order {
     // Personel atamaları
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sales_person_id")
-    private Personel salesPerson; // Teklifi oluşturan satış personeli
+    private User salesPerson; // Teklifi oluşturan satış personeli
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "operation_person_id")
-    private Personel operationPerson; // Operasyoncu
+    private User operationPerson; // Operasyoncu
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fleet_person_id")
-    private Personel fleetPerson; // Filocu
+    private User fleetPerson; // Filocu
 
     // Araç atamaları
     @ManyToOne(fetch = FetchType.LAZY)
@@ -122,7 +122,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customs_person_id")
-    private Personel customsPerson; // Gümrükçü personel
+    private User customsPerson; // Gümrükçü personel
 
     // Tarih bilgileri
     @Column(name = "loading_date")

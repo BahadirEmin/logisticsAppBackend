@@ -41,7 +41,7 @@ public class AuthController {
             UserResponseDTO userResponse = UserResponseDTO.builder()
                     .id(user.getId())
                     .username(user.getUsername())
-                    .name(user.getName())
+                    .name(user.getFullName())
                     .email(user.getEmail())
                     .role(user.getRole())
                     .build();

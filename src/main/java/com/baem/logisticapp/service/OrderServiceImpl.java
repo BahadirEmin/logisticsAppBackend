@@ -18,7 +18,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
-    private final PersonelRepository personelRepository;
+    private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
     private final TrailerRepository trailerRepository;
 
@@ -29,9 +29,9 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
 
         // Sales person'ı bul (eğer belirtilmişse)
-        Personel salesPerson = null;
+        User salesPerson = null;
         if (createDTO.getSalesPersonId() != null) {
-            salesPerson = personelRepository.findById(createDTO.getSalesPersonId())
+            salesPerson = userRepository.findById(createDTO.getSalesPersonId())
                     .orElseThrow(() -> new ResourceNotFoundException("Sales person not found"));
         }
 
@@ -98,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
 
         // Sales person'ı güncelle
         if (updateDTO.getSalesPersonId() != null) {
-            Personel salesPerson = personelRepository.findById(updateDTO.getSalesPersonId())
+            User salesPerson = userRepository.findById(updateDTO.getSalesPersonId())
                     .orElseThrow(() -> new ResourceNotFoundException("Sales person not found"));
             order.setSalesPerson(salesPerson);
         }
@@ -152,7 +152,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
-        Personel operationPerson = personelRepository.findById(operationPersonId)
+        User operationPerson = userRepository.findById(operationPersonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Operation person not found"));
 
         order.setOperationPerson(operationPerson);
@@ -166,7 +166,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
-        Personel fleetPerson = personelRepository.findById(fleetPersonId)
+        User fleetPerson = userRepository.findById(fleetPersonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Fleet person not found"));
 
         order.setFleetPerson(fleetPerson);
@@ -263,27 +263,18 @@ public class OrderServiceImpl implements OrderService {
                 .cargoType(order.getCargoType())
                 .canTransfer(order.getCanTransfer())
                 .salesPersonId(order.getSalesPerson() != null ? order.getSalesPerson().getId() : null)
-                .salesPersonName(order.getSalesPerson() != null
-                        ? order.getSalesPerson().getFirstName() + " " + order.getSalesPerson().getLastName()
-                        : null)
+                .salesPersonName(order.getSalesPerson() != null ? order.getSalesPerson().getFullName() : null)
                 .operationPersonId(order.getOperationPerson() != null ? order.getOperationPerson().getId() : null)
-                .operationPersonName(order.getOperationPerson() != null
-                        ? order.getOperationPerson().getFirstName() + " " + order.getOperationPerson().getLastName()
-                        : null)
+                .operationPersonName(order.getOperationPerson() != null ? order.getOperationPerson().getFullName() : null)
                 .fleetPersonId(order.getFleetPerson() != null ? order.getFleetPerson().getId() : null)
-                .fleetPersonName(order.getFleetPerson() != null
-                        ? order.getFleetPerson().getFirstName() + " " + order.getFleetPerson().getLastName()
-                        : null)
+                .fleetPersonName(order.getFleetPerson() != null ? order.getFleetPerson().getFullName() : null)
                 .assignedTruckId(order.getAssignedTruck() != null ? order.getAssignedTruck().getId() : null)
                 .assignedTruckPlateNo(order.getAssignedTruck() != null ? order.getAssignedTruck().getPlateNo() : null)
                 .assignedTrailerId(order.getAssignedTrailer() != null ? order.getAssignedTrailer().getId() : null)
-                .assignedTrailerNo(
-                        order.getAssignedTrailer() != null ? order.getAssignedTrailer().getTrailerNo() : null)
+                .assignedTrailerNo(order.getAssignedTrailer() != null ? order.getAssignedTrailer().getTrailerNo() : null)
                 .customsAddress(order.getCustomsAddress())
                 .customsPersonId(order.getCustomsPerson() != null ? order.getCustomsPerson().getId() : null)
-                .customsPersonName(order.getCustomsPerson() != null
-                        ? order.getCustomsPerson().getFirstName() + " " + order.getCustomsPerson().getLastName()
-                        : null)
+                .customsPersonName(order.getCustomsPerson() != null ? order.getCustomsPerson().getFullName() : null)
                 .loadingDate(order.getLoadingDate())
                 .deadlineDate(order.getDeadlineDate())
                 .estimatedArrivalDate(order.getEstimatedArrivalDate())
@@ -294,3 +285,4 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 }
+
