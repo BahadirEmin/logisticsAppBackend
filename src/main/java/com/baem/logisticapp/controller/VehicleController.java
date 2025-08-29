@@ -61,19 +61,4 @@ public class VehicleController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate purchasedAfter) {
         return ResponseEntity.ok(vehicleService.searchVehicles(plateNo, vin, make, model, modelYear, ownershipTypeId, active, purchasedAfter));
     }
-
-    @GetMapping("/active")
-    public ResponseEntity<List<VehicleResponseDTO>> getActiveVehicles() {
-        return ResponseEntity.ok(vehicleService.getActiveVehicles());
-    }
-
-    @GetMapping("/plate/{plateNo}")
-    public ResponseEntity<VehicleResponseDTO> getVehicleByPlateNo(@PathVariable String plateNo) {
-        return ResponseEntity.ok(vehicleService.getVehicleByPlateNo(plateNo));
-    }
-
-    @GetMapping("/vin/{vin}")
-    public ResponseEntity<VehicleResponseDTO> getVehicleByVin(@PathVariable String vin) {
-        return ResponseEntity.ok(vehicleService.getVehicleByVin(vin));
-    }
 }

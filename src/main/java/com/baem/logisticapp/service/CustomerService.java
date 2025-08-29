@@ -13,7 +13,6 @@ public interface CustomerService {
      List<CustomerResponseDTO> getAllCustomers();
      CustomerResponseDTO updateCustomer(Long id, CustomerUpdateDTO updateDTO);
      void deleteCustomer(Long id);
-     CustomerResponseDTO getCustomerByTaxNo(String taxNo);
      List<CustomerResponseDTO> searchCustomers(String name, Long riskStatusId, Boolean blacklisted, Boolean inLawsuit, String taxNo);
 
 }

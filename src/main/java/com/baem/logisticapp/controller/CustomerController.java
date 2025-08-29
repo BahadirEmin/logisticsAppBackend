@@ -56,9 +56,4 @@ public class CustomerController {
             @RequestParam(required = false) String taxNo) {
         return ResponseEntity.ok(customerService.searchCustomers(name, riskStatusId, blacklisted, inLawsuit, taxNo));
     }
-
-    @GetMapping("/tax/{taxNo}")
-    public ResponseEntity<CustomerResponseDTO> getCustomerByTaxNo(@PathVariable String taxNo) {
-        return ResponseEntity.ok(customerService.getCustomerByTaxNo(taxNo));
-    }
 }

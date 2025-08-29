@@ -103,13 +103,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerResponseDTO getCustomerByTaxNo(String taxNo) {
-        return customerRepository.findByTaxNo(taxNo)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-    }
-
-    @Override
     public List<CustomerResponseDTO> searchCustomers(String name, Long riskStatusId, Boolean blacklisted, Boolean inLawsuit, String taxNo) {
         return customerRepository.findCustomersWithFilters(name, riskStatusId, blacklisted, inLawsuit, taxNo).stream()
                 .map(this::convertToDTO)

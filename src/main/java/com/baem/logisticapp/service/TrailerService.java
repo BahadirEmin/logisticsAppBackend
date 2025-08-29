@@ -14,9 +14,6 @@ public interface TrailerService {
      List<TrailerResponseDTO> getAllTrailers();
      TrailerResponseDTO updateTrailer(Long id, TrailerUpdateDTO updateDTO);
      void deleteTrailer(Long id);
-     TrailerResponseDTO getTrailerByTrailerNo(String trailerNo);
-     TrailerResponseDTO getTrailerByVin(String vin);
-     List<TrailerResponseDTO> getActiveTrailers();
      List<TrailerResponseDTO> searchTrailers(String trailerNo, String vin, String trailerType, Long ownershipTypeId, Double minCapacity, Double maxCapacity, Boolean active, LocalDate purchasedAfter);
 
 }

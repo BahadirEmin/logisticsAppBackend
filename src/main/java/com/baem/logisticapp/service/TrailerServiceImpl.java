@@ -111,24 +111,6 @@ public class TrailerServiceImpl implements TrailerService {
         trailerRepository.deleteById(id);
     }
 
-    public TrailerResponseDTO getTrailerByTrailerNo(String trailerNo) {
-        return trailerRepository.findByTrailerNo(trailerNo)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Trailer not found"));
-    }
-
-    public TrailerResponseDTO getTrailerByVin(String vin) {
-        return trailerRepository.findByVin(vin)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Trailer not found"));
-    }
-
-    public List<TrailerResponseDTO> getActiveTrailers() {
-        return trailerRepository.findByIsActiveTrue().stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
     @Override
     public List<TrailerResponseDTO> searchTrailers(String trailerNo, String vin, String trailerType, 
                                                    Long ownershipTypeId, Double minCapacity, Double maxCapacity, 

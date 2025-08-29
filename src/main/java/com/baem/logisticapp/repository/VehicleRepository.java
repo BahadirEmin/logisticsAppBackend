@@ -25,9 +25,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     // VIN ile araç var mı kontrol etme
     boolean existsByVin(String vin);
 
-    // Aktif araç bulma
-    List<Vehicle> findByIsActiveTrue();
-
     // Consolidated search method with multiple filters
     @Query("SELECT v FROM Vehicle v WHERE " +
            "(:plateNo IS NULL OR v.plateNo = :plateNo) AND " +

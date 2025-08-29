@@ -3,6 +3,8 @@ package com.baem.logisticapp.repository;
 import com.baem.logisticapp.entity.Order;
 import com.baem.logisticapp.entity.TripStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -49,4 +51,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // Çıkış şehrine göre siparişler
     List<Order> findByDepartureCityContainingIgnoreCase(String city);
+
+    // Consolidated search method with multiple filters
+    @Query("SELECT o FROM Order o WHERE " +
+           "(:customerId IS NULL OR o.customer.id = :customerId) AND " +
+           "(:salesPersonId IS NULL OR o.salesPerson.id = :salesPersonId) AND " +
+           "(:fleetPersonId IS NULL OR o.fleetPerson.id = :fleetPersonId) AND " +
+           "(:tripStatus IS NULL OR LOWER(CAST(o.tripStatus AS string)) = LOWER(:tripStatus))")
+    List<Order> findOrdersWithFilters(@Param("customerId") Long customerId,
+                                    @Param("salesPersonId") Long salesPersonId,
+                                    @Param("fleetPersonId") Long fleetPersonId,
+                                    @Param("tripStatus") String tripStatus);
 }

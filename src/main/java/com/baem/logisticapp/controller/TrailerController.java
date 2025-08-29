@@ -61,19 +61,4 @@ public class TrailerController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate purchasedAfter) {
         return ResponseEntity.ok(trailerService.searchTrailers(trailerNo, vin, trailerType, ownershipTypeId, minCapacity, maxCapacity, active, purchasedAfter));
     }
-
-    @GetMapping("/active")
-    public ResponseEntity<List<TrailerResponseDTO>> getActiveTrailers() {
-        return ResponseEntity.ok(trailerService.getActiveTrailers());
-    }
-
-    @GetMapping("/trailer-no/{trailerNo}")
-    public ResponseEntity<TrailerResponseDTO> getTrailerByTrailerNo(@PathVariable String trailerNo) {
-        return ResponseEntity.ok(trailerService.getTrailerByTrailerNo(trailerNo));
-    }
-
-    @GetMapping("/vin/{vin}")
-    public ResponseEntity<TrailerResponseDTO> getTrailerByVin(@PathVariable String vin) {
-        return ResponseEntity.ok(trailerService.getTrailerByVin(vin));
-    }
 }

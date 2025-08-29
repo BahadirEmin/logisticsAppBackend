@@ -110,27 +110,6 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public VehicleResponseDTO getVehicleByPlateNo(String plateNo) {
-        return vehicleRepository.findByPlateNo(plateNo)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
-    }
-
-    @Override
-    public VehicleResponseDTO getVehicleByVin(String vin) {
-        return vehicleRepository.findByVin(vin)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
-    }
-
-    @Override
-    public List<VehicleResponseDTO> getActiveVehicles() {
-        return vehicleRepository.findByIsActiveTrue().stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
     public List<VehicleResponseDTO> searchVehicles(String plateNo, String vin, String make, String model, 
                                                    Short modelYear, Long ownershipTypeId, Boolean active, LocalDate purchasedAfter) {
         return vehicleRepository.findVehiclesWithFilters(plateNo, vin, make, model, modelYear, ownershipTypeId, active, purchasedAfter).stream()

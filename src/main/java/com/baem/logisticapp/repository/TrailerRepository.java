@@ -25,9 +25,6 @@ public interface TrailerRepository extends JpaRepository<Trailer, Long> {
     // VIN ile trailer var mı kontrol etme
     boolean existsByVin(String vin);
 
-    // Aktif trailer bulma
-    List<Trailer> findByIsActiveTrue();
-
     // Consolidated search method with multiple filters
     @Query("SELECT t FROM Trailer t WHERE " +
            "(:trailerNo IS NULL OR t.trailerNo = :trailerNo) AND " +

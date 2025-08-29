@@ -18,13 +18,7 @@ public interface OrderService {
 
     void deleteOrder(Long id);
 
-    List<OrderResponseDTO> getOrdersByCustomerId(Long customerId);
-
-    List<OrderResponseDTO> getOrdersBySalesPersonId(Long salesPersonId);
-
-    List<OrderResponseDTO> getOrdersByFleetPersonId(Long fleetPersonId);
-
-    List<OrderResponseDTO> getOrdersByTripStatus(String tripStatus);
+    List<OrderResponseDTO> searchOrders(Long customerId, Long salesPersonId, Long fleetPersonId, String tripStatus);
 
     OrderResponseDTO assignToOperation(Long orderId, Long operationPersonId);
 

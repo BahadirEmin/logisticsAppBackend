@@ -51,24 +51,13 @@ public class OrderController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<OrderResponseDTO>> getOrdersByCustomerId(@PathVariable Long customerId) {
-        return ResponseEntity.ok(orderService.getOrdersByCustomerId(customerId));
-    }
-
-    @GetMapping("/sales-person/{salesPersonId}")
-    public ResponseEntity<List<OrderResponseDTO>> getOrdersBySalesPersonId(@PathVariable Long salesPersonId) {
-        return ResponseEntity.ok(orderService.getOrdersBySalesPersonId(salesPersonId));
-    }
-
-    @GetMapping("/fleet-person/{fleetPersonId}")
-    public ResponseEntity<List<OrderResponseDTO>> getOrdersByFleetPersonId(@PathVariable Long fleetPersonId) {
-        return ResponseEntity.ok(orderService.getOrdersByFleetPersonId(fleetPersonId));
-    }
-
-    @GetMapping("/status/{tripStatus}")
-    public ResponseEntity<List<OrderResponseDTO>> getOrdersByTripStatus(@PathVariable String tripStatus) {
-        return ResponseEntity.ok(orderService.getOrdersByTripStatus(tripStatus));
+    @GetMapping("/search")
+    public ResponseEntity<List<OrderResponseDTO>> searchOrders(
+            @RequestParam(required = false) Long customerId,
+            @RequestParam(required = false) Long salesPersonId,
+            @RequestParam(required = false) Long fleetPersonId,
+            @RequestParam(required = false) String tripStatus) {
+        return ResponseEntity.ok(orderService.searchOrders(customerId, salesPersonId, fleetPersonId, tripStatus));
     }
 
     @PostMapping("/{orderId}/assign-operation")

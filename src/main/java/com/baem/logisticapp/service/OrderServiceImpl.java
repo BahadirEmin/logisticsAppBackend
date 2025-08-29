@@ -149,30 +149,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponseDTO> getOrdersByCustomerId(Long customerId) {
-        return orderRepository.findByCustomerId(customerId).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<OrderResponseDTO> getOrdersBySalesPersonId(Long salesPersonId) {
-        return orderRepository.findBySalesPersonId(salesPersonId).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<OrderResponseDTO> getOrdersByFleetPersonId(Long fleetPersonId) {
-        return orderRepository.findByFleetPersonId(fleetPersonId).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<OrderResponseDTO> getOrdersByTripStatus(String tripStatus) {
-        TripStatus status = TripStatus.valueOf(tripStatus.toUpperCase());
-        return orderRepository.findByTripStatus(status).stream()
+    public List<OrderResponseDTO> searchOrders(Long customerId, Long salesPersonId, Long fleetPersonId, String tripStatus) {
+        return orderRepository.findOrdersWithFilters(customerId, salesPersonId, fleetPersonId, tripStatus).stream()
                 .map(this::convertToDTO)
                 .toList();
     }
