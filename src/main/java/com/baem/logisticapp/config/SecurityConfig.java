@@ -37,8 +37,10 @@ public class SecurityConfig {
                                 "/api/v1/orders/**", // Temporary for Swagger testing
                                 "/api/v1/customers/**") // Temporary for Swagger testing
                         .permitAll()
-                        .requestMatchers("/api/v1/vehicles/**").hasAnyRole("FLEET", "ADMIN")
-                        .requestMatchers("/api/v1/trailers/**").hasAnyRole("FLEET", "ADMIN")
+                        .requestMatchers("/api/customers/**").hasAnyAuthority("SALES", "ADMIN")
+                        .requestMatchers("/api/orders/**").hasAnyAuthority("SALES", "OPERATION", "ADMIN")
+                        .requestMatchers("/api/v1/vehicles/**").hasAnyAuthority("FLEET", "ADMIN")
+                        .requestMatchers("/api/v1/trailers/**").hasAnyAuthority("FLEET", "ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

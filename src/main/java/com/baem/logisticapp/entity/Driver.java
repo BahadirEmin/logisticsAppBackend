@@ -48,4 +48,9 @@ public class Driver {
 
     @Builder.Default
     private Boolean isActive = true;
+    
+    // Helper method to get full name
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

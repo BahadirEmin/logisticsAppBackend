@@ -116,6 +116,26 @@ public class Order {
     @JoinColumn(name = "assigned_trailer_id")
     private Trailer assignedTrailer; // Atanacak trailer
 
+    // Şoför ataması (opsiyonel)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_driver_id")
+    private Driver assignedDriver; // Atanacak şoför
+
+    // Fiyat bilgileri
+    @Column(name = "quote_price", precision = 10, scale = 2)
+    private BigDecimal quotePrice; // Teklif edilen fiyat
+
+    @Column(name = "actual_price", precision = 10, scale = 2)
+    private BigDecimal actualPrice; // Gerçekleşen fiyat
+
+    // Tedarik türü (Kiralık, Özmal)
+    @Column(name = "supply_type")
+    private String supplyType; // "KIRALIK", "OZMAL"
+
+    // Sefer numarası
+    @Column(name = "trip_number", unique = true)
+    private String tripNumber; // Otomatik atanan sefer numarası
+
     // Gümrük bilgileri
     @Column(name = "customs_address", columnDefinition = "TEXT")
     private String customsAddress;

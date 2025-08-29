@@ -33,6 +33,10 @@ public class User {
     @Column(name = "is_active")
     private Boolean isActive = true; // Aktif/pasif durumu
 
+    @Builder.Default
+    @Column(name = "can_approve_quotes")
+    private Boolean canApproveQuotes = false; // Teklif onaylama yetkisi
+
     private String email; // Email adresi
 
     @Column(nullable = false)

@@ -29,4 +29,11 @@ public interface OrderService {
     OrderResponseDTO assignToOperation(Long orderId, Long operationPersonId);
 
     OrderResponseDTO assignToFleet(Long orderId, Long fleetPersonId);
+    
+    // Yeni metodlar
+    OrderResponseDTO approveQuote(Long orderId, Long approverUserId);
+    
+    OrderResponseDTO cancelQuote(Long orderId, Long cancelerUserId);
+    
+    OrderResponseDTO assignToOperationByOperation(Long orderId, Long newOperationPersonId, Long currentOperationPersonId);
 }

@@ -63,6 +63,20 @@ public class OrderResponseDTO {
     private String assignedTruckPlateNo;
     private Long assignedTrailerId;
     private String assignedTrailerNo;
+    
+    // Şoför ataması
+    private Long assignedDriverId;
+    private String assignedDriverName;
+    
+    // Fiyat bilgileri
+    private BigDecimal quotePrice;
+    private BigDecimal actualPrice;
+    
+    // Tedarik türü
+    private String supplyType;
+    
+    // Sefer numarası
+    private String tripNumber;
 
     // Gümrük bilgileri
     private String customsAddress;

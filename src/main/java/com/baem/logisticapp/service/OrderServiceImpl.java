@@ -21,6 +21,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
     private final TrailerRepository trailerRepository;
+    private final DriverRepository driverRepository;
 
     @Override
     public OrderResponseDTO createOrder(OrderCreateDTO createDTO) {
@@ -34,6 +35,28 @@ public class OrderServiceImpl implements OrderService {
             salesPerson = userRepository.findById(createDTO.getSalesPersonId())
                     .orElseThrow(() -> new ResourceNotFoundException("Sales person not found"));
         }
+
+        // Araç bilgilerini bul (eğer belirtilmişse)
+        Vehicle assignedTruck = null;
+        if (createDTO.getAssignedTruckId() != null) {
+            assignedTruck = vehicleRepository.findById(createDTO.getAssignedTruckId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
+        }
+
+        Trailer assignedTrailer = null;
+        if (createDTO.getAssignedTrailerId() != null) {
+            assignedTrailer = trailerRepository.findById(createDTO.getAssignedTrailerId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Trailer not found"));
+        }
+
+        Driver assignedDriver = null;
+        if (createDTO.getAssignedDriverId() != null) {
+            assignedDriver = driverRepository.findById(createDTO.getAssignedDriverId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
+        }
+
+        // Sefer numarası oluştur
+        String tripNumber = generateTripNumber();
 
         Order order = Order.builder()
                 .customer(customer)
@@ -60,6 +83,13 @@ public class OrderServiceImpl implements OrderService {
                 .cargoType(createDTO.getCargoType())
                 .canTransfer(createDTO.getCanTransfer())
                 .salesPerson(salesPerson)
+                .assignedTruck(assignedTruck)
+                .assignedTrailer(assignedTrailer)
+                .assignedDriver(assignedDriver)
+                .quotePrice(createDTO.getQuotePrice())
+                .actualPrice(createDTO.getActualPrice())
+                .supplyType(createDTO.getSupplyType())
+                .tripNumber(tripNumber)
                 .customsAddress(createDTO.getCustomsAddress())
                 .loadingDate(createDTO.getLoadingDate())
                 .deadlineDate(createDTO.getDeadlineDate())
@@ -175,6 +205,81 @@ public class OrderServiceImpl implements OrderService {
         return convertToDTO(orderRepository.save(order));
     }
 
+    // Sefer numarası oluşturma metodu
+    private String generateTripNumber() {
+        // Basit bir sefer numarası oluşturma: SF + timestamp
+        return "SF" + System.currentTimeMillis();
+    }
+
+    // Teklif onaylama metodu
+    @Override
+    public OrderResponseDTO approveQuote(Long orderId, Long approverUserId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        User approver = userRepository.findById(approverUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (!approver.getCanApproveQuotes()) {
+            throw new IllegalArgumentException("User does not have quote approval authority");
+        }
+
+        if (order.getTripStatus() != TripStatus.TEKLIF_ASAMASI) {
+            throw new IllegalArgumentException("Order is not in quote stage");
+        }
+
+        order.setTripStatus(TripStatus.ONAYLANAN_TEKLIF);
+        order.setUpdatedAt(OffsetDateTime.now());
+
+        return convertToDTO(orderRepository.save(order));
+    }
+
+    // Teklif iptal etme metodu
+    @Override
+    public OrderResponseDTO cancelQuote(Long orderId, Long cancelerUserId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        User canceler = userRepository.findById(cancelerUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (!canceler.getCanApproveQuotes()) {
+            throw new IllegalArgumentException("User does not have quote cancellation authority");
+        }
+
+        if (order.getTripStatus() != TripStatus.TEKLIF_ASAMASI) {
+            throw new IllegalArgumentException("Order is not in quote stage");
+        }
+
+        order.setTripStatus(TripStatus.IPTAL_EDILDI);
+        order.setUpdatedAt(OffsetDateTime.now());
+
+        return convertToDTO(orderRepository.save(order));
+    }
+
+    // Operasyoncu atama metodu (operasyoncu kendi yerine başkasını atayabilir)
+    @Override
+    public OrderResponseDTO assignToOperationByOperation(Long orderId, Long newOperationPersonId, Long currentOperationPersonId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        User currentOperationPerson = userRepository.findById(currentOperationPersonId)
+                .orElseThrow(() -> new ResourceNotFoundException("Current operation person not found"));
+
+        User newOperationPerson = userRepository.findById(newOperationPersonId)
+                .orElseThrow(() -> new ResourceNotFoundException("New operation person not found"));
+
+        // Mevcut operasyoncunun bu görevi değiştirme yetkisi var mı kontrol et
+        if (!currentOperationPerson.getRole().equals(Role.OPERATION)) {
+            throw new IllegalArgumentException("Current user is not an operation person");
+        }
+
+        order.setOperationPerson(newOperationPerson);
+        order.setUpdatedAt(OffsetDateTime.now());
+
+        return convertToDTO(orderRepository.save(order));
+    }
+
     private void updateOrderFields(Order order, OrderUpdateDTO updateDTO) {
         if (updateDTO.getDepartureCountry() != null)
             order.setDepartureCountry(updateDTO.getDepartureCountry());
@@ -272,6 +377,12 @@ public class OrderServiceImpl implements OrderService {
                 .assignedTruckPlateNo(order.getAssignedTruck() != null ? order.getAssignedTruck().getPlateNo() : null)
                 .assignedTrailerId(order.getAssignedTrailer() != null ? order.getAssignedTrailer().getId() : null)
                 .assignedTrailerNo(order.getAssignedTrailer() != null ? order.getAssignedTrailer().getTrailerNo() : null)
+                .assignedDriverId(order.getAssignedDriver() != null ? order.getAssignedDriver().getId() : null)
+                .assignedDriverName(order.getAssignedDriver() != null ? order.getAssignedDriver().getFullName() : null)
+                .quotePrice(order.getQuotePrice())
+                .actualPrice(order.getActualPrice())
+                .supplyType(order.getSupplyType())
+                .tripNumber(order.getTripNumber())
                 .customsAddress(order.getCustomsAddress())
                 .customsPersonId(order.getCustomsPerson() != null ? order.getCustomsPerson().getId() : null)
                 .customsPersonName(order.getCustomsPerson() != null ? order.getCustomsPerson().getFullName() : null)

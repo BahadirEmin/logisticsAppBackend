@@ -80,4 +80,26 @@ public class OrderController {
             @RequestParam Long fleetPersonId) {
         return ResponseEntity.ok(orderService.assignToFleet(orderId, fleetPersonId));
     }
+
+    @PostMapping("/{orderId}/approve-quote")
+    public ResponseEntity<OrderResponseDTO> approveQuote(
+            @PathVariable Long orderId,
+            @RequestParam Long approverUserId) {
+        return ResponseEntity.ok(orderService.approveQuote(orderId, approverUserId));
+    }
+
+    @PostMapping("/{orderId}/cancel-quote")
+    public ResponseEntity<OrderResponseDTO> cancelQuote(
+            @PathVariable Long orderId,
+            @RequestParam Long cancelerUserId) {
+        return ResponseEntity.ok(orderService.cancelQuote(orderId, cancelerUserId));
+    }
+
+    @PostMapping("/{orderId}/reassign-operation")
+    public ResponseEntity<OrderResponseDTO> reassignOperation(
+            @PathVariable Long orderId,
+            @RequestParam Long newOperationPersonId,
+            @RequestParam Long currentOperationPersonId) {
+        return ResponseEntity.ok(orderService.assignToOperationByOperation(orderId, newOperationPersonId, currentOperationPersonId));
+    }
 }
