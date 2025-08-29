@@ -49,6 +49,19 @@ public class TrailerController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<TrailerResponseDTO>> searchTrailers(
+            @RequestParam(required = false) String trailerNo,
+            @RequestParam(required = false) String vin,
+            @RequestParam(required = false) String trailerType,
+            @RequestParam(required = false) Long ownershipTypeId,
+            @RequestParam(required = false) Double minCapacity,
+            @RequestParam(required = false) Double maxCapacity,
+            @RequestParam(required = false) Boolean active,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate purchasedAfter) {
+        return ResponseEntity.ok(trailerService.searchTrailers(trailerNo, vin, trailerType, ownershipTypeId, minCapacity, maxCapacity, active, purchasedAfter));
+    }
+
     @GetMapping("/active")
     public ResponseEntity<List<TrailerResponseDTO>> getActiveTrailers() {
         return ResponseEntity.ok(trailerService.getActiveTrailers());
@@ -62,33 +75,5 @@ public class TrailerController {
     @GetMapping("/vin/{vin}")
     public ResponseEntity<TrailerResponseDTO> getTrailerByVin(@PathVariable String vin) {
         return ResponseEntity.ok(trailerService.getTrailerByVin(vin));
-    }
-
-    @GetMapping("/type/{trailerType}")
-    public ResponseEntity<List<TrailerResponseDTO>> getTrailersByType(@PathVariable String trailerType) {
-        return ResponseEntity.ok(trailerService.getTrailersByType(trailerType));
-    }
-
-    @GetMapping("/ownership-type/{ownershipTypeId}")
-    public ResponseEntity<List<TrailerResponseDTO>> getTrailersByOwnershipType(@PathVariable Long ownershipTypeId) {
-        return ResponseEntity.ok(trailerService.getTrailersByOwnershipType(ownershipTypeId));
-    }
-
-    @GetMapping("/capacity/greater-than")
-    public ResponseEntity<List<TrailerResponseDTO>> getTrailersByCapacityGreaterThan(@RequestParam Double capacity) {
-        return ResponseEntity.ok(trailerService.getTrailersByCapacityGreaterThan(capacity));
-    }
-
-    @GetMapping("/capacity/range")
-    public ResponseEntity<List<TrailerResponseDTO>> getTrailersByCapacityRange(
-            @RequestParam Double minCapacity,
-            @RequestParam Double maxCapacity) {
-        return ResponseEntity.ok(trailerService.getTrailersByCapacityRange(minCapacity, maxCapacity));
-    }
-
-    @GetMapping("/purchased-after")
-    public ResponseEntity<List<TrailerResponseDTO>> getTrailersPurchasedAfter(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return ResponseEntity.ok(trailerService.getTrailersPurchasedAfter(date));
     }
 }

@@ -2,6 +2,8 @@ package com.baem.logisticapp.repository;
 
 import com.baem.logisticapp.entity.Trailer;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -17,51 +19,31 @@ public interface TrailerRepository extends JpaRepository<Trailer, Long> {
     // VIN ile trailer bulma
     Optional<Trailer> findByVin(String vin);
 
-    // Make ve model ile trailer bulma
-    List<Trailer> findByMakeAndModel(String make, String model);
-
-    // Trailer type ile trailer bulma
-    List<Trailer> findByTrailerType(String trailerType);
-
-    // Aktif trailer bulma
-    List<Trailer> findByIsActiveTrue();
-
-    // Ownership type ile trailer bulma
-    List<Trailer> findByOwnershipTypeId(Long ownershipTypeId);
-
-    // Model year ile trailer bulma
-    List<Trailer> findByModelYear(Short modelYear);
-
-    // Belirli bir kapasiteden büyük trailer bulma
-    List<Trailer> findByCapacityGreaterThan(Double capacity);
-
-    // Belirli bir kapasiteden küçük trailer bulma
-    List<Trailer> findByCapacityLessThan(Double capacity);
-
-    // Kapasite aralığında trailer bulma
-    List<Trailer> findByCapacityBetween(Double minCapacity, Double maxCapacity);
-
-    // Satın alma tarihine göre trailer bulma
-    List<Trailer> findByPurchaseDateAfter(LocalDate date);
-
     // Trailer number ile trailer var mı kontrol etme
     boolean existsByTrailerNo(String trailerNo);
 
     // VIN ile trailer var mı kontrol etme
     boolean existsByVin(String vin);
 
-    // Make ile trailer bulma
-    List<Trailer> findByMake(String make);
+    // Aktif trailer bulma
+    List<Trailer> findByIsActiveTrue();
 
-    // Model ile trailer bulma
-    List<Trailer> findByModel(String model);
-
-    // Ownership type ve aktiflik durumuna göre trailer bulma
-    List<Trailer> findByOwnershipTypeIdAndIsActiveTrue(Long ownershipTypeId);
-
-    // Trailer type ve aktiflik durumuna göre trailer bulma
-    List<Trailer> findByTrailerTypeAndIsActiveTrue(String trailerType);
-
-    // Belirli bir kapasiteden büyük aktif trailer bulma
-    List<Trailer> findByCapacityGreaterThanAndIsActiveTrue(Double capacity);
+    // Consolidated search method with multiple filters
+    @Query("SELECT t FROM Trailer t WHERE " +
+           "(:trailerNo IS NULL OR t.trailerNo = :trailerNo) AND " +
+           "(:vin IS NULL OR t.vin = :vin) AND " +
+           "(:trailerType IS NULL OR LOWER(t.trailerType) LIKE LOWER(CONCAT('%', :trailerType, '%'))) AND " +
+           "(:ownershipTypeId IS NULL OR t.ownershipType.id = :ownershipTypeId) AND " +
+           "(:minCapacity IS NULL OR t.capacity >= :minCapacity) AND " +
+           "(:maxCapacity IS NULL OR t.capacity <= :maxCapacity) AND " +
+           "(:active IS NULL OR t.isActive = :active) AND " +
+           "(:purchasedAfter IS NULL OR t.purchaseDate > :purchasedAfter)")
+    List<Trailer> findTrailersWithFilters(@Param("trailerNo") String trailerNo,
+                                        @Param("vin") String vin,
+                                        @Param("trailerType") String trailerType,
+                                        @Param("ownershipTypeId") Long ownershipTypeId,
+                                        @Param("minCapacity") Double minCapacity,
+                                        @Param("maxCapacity") Double maxCapacity,
+                                        @Param("active") Boolean active,
+                                        @Param("purchasedAfter") LocalDate purchasedAfter);
 }

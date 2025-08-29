@@ -11,6 +11,7 @@ import com.baem.logisticapp.repository.VehicleOwnershipTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -122,86 +123,17 @@ public class TrailerServiceImpl implements TrailerService {
                 .orElseThrow(() -> new ResourceNotFoundException("Trailer not found"));
     }
 
-    public List<TrailerResponseDTO> getTrailersByMakeAndModel(String make, String model) {
-        return trailerRepository.findByMakeAndModel(make, model).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    public List<TrailerResponseDTO> getTrailersByType(String trailerType) {
-        return trailerRepository.findByTrailerType(trailerType).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
     public List<TrailerResponseDTO> getActiveTrailers() {
         return trailerRepository.findByIsActiveTrue().stream()
                 .map(this::convertToDTO)
                 .toList();
     }
 
-    public List<TrailerResponseDTO> getTrailersByOwnershipType(Long ownershipTypeId) {
-        return trailerRepository.findByOwnershipTypeId(ownershipTypeId).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    public List<TrailerResponseDTO> getTrailersByModelYear(Short modelYear) {
-        return trailerRepository.findByModelYear(modelYear).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    public List<TrailerResponseDTO> getTrailersByCapacityGreaterThan(Double capacity) {
-        return trailerRepository.findByCapacityGreaterThan(capacity).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    public List<TrailerResponseDTO> getTrailersByCapacityLessThan(Double capacity) {
-        return trailerRepository.findByCapacityLessThan(capacity).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    public List<TrailerResponseDTO> getTrailersByCapacityRange(Double minCapacity, Double maxCapacity) {
-        return trailerRepository.findByCapacityBetween(minCapacity, maxCapacity).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    public List<TrailerResponseDTO> getTrailersPurchasedAfter(java.time.LocalDate date) {
-        return trailerRepository.findByPurchaseDateAfter(date).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    public List<TrailerResponseDTO> getTrailersByMake(String make) {
-        return trailerRepository.findByMake(make).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    public List<TrailerResponseDTO> getTrailersByModel(String model) {
-        return trailerRepository.findByModel(model).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    public List<TrailerResponseDTO> getActiveTrailersByOwnershipType(Long ownershipTypeId) {
-        return trailerRepository.findByOwnershipTypeIdAndIsActiveTrue(ownershipTypeId).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    public List<TrailerResponseDTO> getActiveTrailersByType(String trailerType) {
-        return trailerRepository.findByTrailerTypeAndIsActiveTrue(trailerType).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    public List<TrailerResponseDTO> getActiveTrailersByCapacityGreaterThan(Double capacity) {
-        return trailerRepository.findByCapacityGreaterThanAndIsActiveTrue(capacity).stream()
+    @Override
+    public List<TrailerResponseDTO> searchTrailers(String trailerNo, String vin, String trailerType, 
+                                                   Long ownershipTypeId, Double minCapacity, Double maxCapacity, 
+                                                   Boolean active, LocalDate purchasedAfter) {
+        return trailerRepository.findTrailersWithFilters(trailerNo, vin, trailerType, ownershipTypeId, minCapacity, maxCapacity, active, purchasedAfter).stream()
                 .map(this::convertToDTO)
                 .toList();
     }

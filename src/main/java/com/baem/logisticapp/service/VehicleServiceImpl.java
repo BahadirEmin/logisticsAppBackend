@@ -124,13 +124,6 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<VehicleResponseDTO> getVehiclesByMakeAndModel(String make, String model) {
-        return vehicleRepository.findByMakeAndModel(make, model).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
     public List<VehicleResponseDTO> getActiveVehicles() {
         return vehicleRepository.findByIsActiveTrue().stream()
                 .map(this::convertToDTO)
@@ -138,85 +131,9 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<VehicleResponseDTO> getVehiclesByOwnershipType(Long ownershipTypeId) {
-        return vehicleRepository.findByOwnershipTypeId(ownershipTypeId).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<VehicleResponseDTO> getVehiclesByModelYear(Short modelYear) {
-        return vehicleRepository.findByModelYear(modelYear).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<VehicleResponseDTO> getVehiclesPurchasedAfter(java.time.LocalDate date) {
-        return vehicleRepository.findByPurchaseDateAfter(date).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<VehicleResponseDTO> getVehiclesByMake(String make) {
-        return vehicleRepository.findByMake(make).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<VehicleResponseDTO> getVehiclesByModel(String model) {
-        return vehicleRepository.findByModel(model).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<VehicleResponseDTO> getActiveVehiclesByOwnershipType(Long ownershipTypeId) {
-        return vehicleRepository.findByOwnershipTypeIdAndIsActiveTrue(ownershipTypeId).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<VehicleResponseDTO> getActiveVehiclesByMake(String make) {
-        return vehicleRepository.findByMakeAndIsActiveTrue(make).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<VehicleResponseDTO> getActiveVehiclesByModel(String model) {
-        return vehicleRepository.findByModelAndIsActiveTrue(model).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<VehicleResponseDTO> getActiveVehiclesByModelYear(Short modelYear) {
-        return vehicleRepository.findByModelYearAndIsActiveTrue(modelYear).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<VehicleResponseDTO> getActiveVehiclesPurchasedAfter(LocalDate date) {
-        return vehicleRepository.findByPurchaseDateAfterAndIsActiveTrue(date).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<VehicleResponseDTO> getVehiclesByMakeAndModelYear(String make, Short modelYear) {
-        return vehicleRepository.findByMakeAndModelYear(make, modelYear).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<VehicleResponseDTO> getVehiclesByModelAndModelYear(String model, Short modelYear) {
-        return vehicleRepository.findByModelAndModelYear(model, modelYear).stream()
+    public List<VehicleResponseDTO> searchVehicles(String plateNo, String vin, String make, String model, 
+                                                   Short modelYear, Long ownershipTypeId, Boolean active, LocalDate purchasedAfter) {
+        return vehicleRepository.findVehiclesWithFilters(plateNo, vin, make, model, modelYear, ownershipTypeId, active, purchasedAfter).stream()
                 .map(this::convertToDTO)
                 .toList();
     }
