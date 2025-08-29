@@ -70,13 +70,6 @@ public class CustomerRiskStatusServiceImpl implements CustomerRiskStatusService 
         customerRiskStatusRepository.deleteById(id);
     }
 
-    @Override
-    public CustomerRiskStatusResponseDTO getRiskStatusByName(String statusName) {
-        return customerRiskStatusRepository.findByStatusName(statusName)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Risk status not found"));
-    }
-
     private CustomerRiskStatusResponseDTO convertToDTO(CustomerRiskStatus riskStatus) {
         return CustomerRiskStatusResponseDTO.builder()
                 .id(riskStatus.getId())

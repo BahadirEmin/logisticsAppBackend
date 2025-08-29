@@ -47,9 +47,4 @@ public class CustomerRiskStatusController {
         customerRiskStatusService.deleteRiskStatus(id);
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/name/{statusName}")
-    public ResponseEntity<CustomerRiskStatusResponseDTO> getRiskStatusByName(@PathVariable String statusName) {
-        return ResponseEntity.ok(customerRiskStatusService.getRiskStatusByName(statusName));
-    }
 }
