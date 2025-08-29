@@ -4,6 +4,9 @@ import com.baem.logisticapp.dto.OrderCreateDTO;
 import com.baem.logisticapp.dto.OrderResponseDTO;
 import com.baem.logisticapp.dto.OrderUpdateDTO;
 import com.baem.logisticapp.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
+@Tag(name = "Order Management", description = "Order management operations")
 public class OrderController {
 
     private final OrderService orderService;
@@ -101,5 +105,18 @@ public class OrderController {
             @RequestParam Long newOperationPersonId,
             @RequestParam Long currentOperationPersonId) {
         return ResponseEntity.ok(orderService.assignToOperationByOperation(orderId, newOperationPersonId, currentOperationPersonId));
+    }
+
+    @PostMapping("/{orderId}/assign-fleet-resources")
+    @Operation(
+        summary = "Assign fleet resources to order",
+        description = "Assign vehicle, trailer, and/or driver to an order. All parameters are optional."
+    )
+    public ResponseEntity<OrderResponseDTO> assignFleet(
+            @Parameter(description = "Order ID") @PathVariable Long orderId,
+            @Parameter(description = "Vehicle ID (optional)") @RequestParam(required = false) Long vehicleId,
+            @Parameter(description = "Trailer ID (optional)") @RequestParam(required = false) Long trailerId,
+            @Parameter(description = "Driver ID (optional)") @RequestParam(required = false) Long driverId) {
+        return ResponseEntity.ok(orderService.assignFleet(orderId, vehicleId, trailerId, driverId));
     }
 }

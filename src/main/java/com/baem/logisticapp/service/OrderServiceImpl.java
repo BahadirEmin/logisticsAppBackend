@@ -395,5 +395,34 @@ public class OrderServiceImpl implements OrderService {
                 .updatedAt(order.getUpdatedAt())
                 .build();
     }
+
+    @Override
+    public OrderResponseDTO assignFleet(Long orderId, Long vehicleId, Long trailerId, Long driverId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+
+        // Vehicle assignment
+        if (vehicleId != null) {
+            Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                    .orElseThrow(() -> new RuntimeException("Vehicle not found with id: " + vehicleId));
+            order.setAssignedTruck(vehicle);
+        }
+
+        // Trailer assignment
+        if (trailerId != null) {
+            Trailer trailer = trailerRepository.findById(trailerId)
+                    .orElseThrow(() -> new RuntimeException("Trailer not found with id: " + trailerId));
+            order.setAssignedTrailer(trailer);
+        }
+
+        // Driver assignment
+        if (driverId != null) {
+            Driver driver = driverRepository.findById(driverId)
+                    .orElseThrow(() -> new RuntimeException("Driver not found with id: " + driverId));
+            order.setAssignedDriver(driver);
+        }
+
+        return convertToDTO(orderRepository.save(order));
+    }
 }
 

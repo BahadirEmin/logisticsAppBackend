@@ -36,4 +36,6 @@ public interface OrderService {
     OrderResponseDTO cancelQuote(Long orderId, Long cancelerUserId);
     
     OrderResponseDTO assignToOperationByOperation(Long orderId, Long newOperationPersonId, Long currentOperationPersonId);
+    
+    OrderResponseDTO assignFleet(Long orderId, Long vehicleId, Long trailerId, Long driverId);
 }
