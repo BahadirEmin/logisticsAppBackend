@@ -50,6 +50,18 @@ public class OrderCreateDTO {
     // Personel atamaları
     private Long salesPersonId; // Teklifi oluşturan satış personeli
 
+    // Araç ve şoför atamaları
+    private Long assignedTruckId;
+    private Long assignedTrailerId;
+    private Long assignedDriverId; // Opsiyonel
+
+    // Fiyat bilgileri
+    private BigDecimal quotePrice; // Teklif edilen fiyat
+    private BigDecimal actualPrice; // Gerçekleşen fiyat
+
+    // Tedarik türü
+    private String supplyType; // "KIRALIK", "OZMAL"
+
     // Gümrük bilgileri
     private String customsAddress;
 

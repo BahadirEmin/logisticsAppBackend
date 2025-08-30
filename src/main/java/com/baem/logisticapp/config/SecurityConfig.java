@@ -30,16 +30,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/login",
-                                "/swagger-ui.html", "/swagger-ui/**",
-                                "/v3/api-docs/**", "/api-docs/**",
-                                "/api/v1/orders/**", // Temporary for Swagger testing
-                                "/api/v1/customers/**") // Temporary for Swagger testing
-                        .permitAll()
-                        .requestMatchers("/api/v1/vehicles/**").hasAnyRole("FLEET", "ADMIN")
-                        .requestMatchers("/api/v1/trailers/**").hasAnyRole("FLEET", "ADMIN")
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll()) // Security disabled temporarily for testing
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

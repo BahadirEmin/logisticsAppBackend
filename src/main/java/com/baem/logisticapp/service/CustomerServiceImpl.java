@@ -103,50 +103,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerResponseDTO> getCustomersByRiskStatus(Long riskStatusId) {
-        return customerRepository.findByRiskStatusId(riskStatusId).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<CustomerResponseDTO> getBlacklistedCustomers() {
-        return customerRepository.findByIsBlacklistedTrue().stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<CustomerResponseDTO> getCustomersInLawsuit() {
-        return customerRepository.findByIsInLawsuitTrue().stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public CustomerResponseDTO getCustomerByTaxNo(String taxNo) {
-        return customerRepository.findByTaxNo(taxNo)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-    }
-
-    @Override
-    public List<CustomerResponseDTO> searchCustomersByName(String name) {
-        return customerRepository.findByNameContainingIgnoreCase(name).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<CustomerResponseDTO> getBlacklistedCustomersByRiskStatus(Long riskStatusId) {
-        return customerRepository.findByRiskStatusIdAndIsBlacklistedTrue(riskStatusId).stream()
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<CustomerResponseDTO> getCustomersInLawsuitByRiskStatus(Long riskStatusId) {
-        return customerRepository.findByRiskStatusIdAndIsInLawsuitTrue(riskStatusId).stream()
+    public List<CustomerResponseDTO> searchCustomers(String name, Long riskStatusId, Boolean blacklisted, Boolean inLawsuit, String taxNo) {
+        return customerRepository.findCustomersWithFilters(name, riskStatusId, blacklisted, inLawsuit, taxNo).stream()
                 .map(this::convertToDTO)
                 .toList();
     }

@@ -13,11 +13,6 @@ public interface DriverService {
     List<DriverResponseDTO> getAllDrivers();
     DriverResponseDTO updateDriver(Long id, DriverUpdateDTO updateDTO);
     void deleteDriver(Long id);
-    List<DriverResponseDTO> getActiveDrivers();
-    DriverResponseDTO getDriverByLicenseNo(String licenseNo);
-    List<DriverResponseDTO> getDriversByLicenseClass(String licenseClass);
-    List<DriverResponseDTO> getDriversWithExpiringPassport(LocalDate expiryDate);
-    List<DriverResponseDTO> getDriversWithExpiringVisa(LocalDate expiryDate);
-    List<DriverResponseDTO> getDriversWithExpiringResidencePermit(LocalDate expiryDate);
+    List<DriverResponseDTO> searchDrivers(String licenseNo, Boolean active);
 
 }

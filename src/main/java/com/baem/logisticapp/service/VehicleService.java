@@ -14,21 +14,6 @@ public interface VehicleService {
      VehicleResponseDTO getVehicleById(Long id);
      VehicleResponseDTO updateVehicle(Long id, VehicleUpdateDTO updateDTO);
      void deleteVehicle(Long id);
-     VehicleResponseDTO getVehicleByPlateNo(String plateNo);
-     VehicleResponseDTO getVehicleByVin(String vin);
-     List<VehicleResponseDTO> getVehiclesByMakeAndModel(String make, String model);
-     List<VehicleResponseDTO> getActiveVehicles();
-     List<VehicleResponseDTO> getVehiclesByOwnershipType(Long ownershipTypeId);
-     List<VehicleResponseDTO> getVehiclesByModelYear(Short modelYear);
-     List<VehicleResponseDTO> getVehiclesPurchasedAfter(java.time.LocalDate date);
-     List<VehicleResponseDTO> getVehiclesByMake(String make);
-     List<VehicleResponseDTO> getVehiclesByModel(String model);
-     List<VehicleResponseDTO> getActiveVehiclesByOwnershipType(Long ownershipTypeId);
-     List<VehicleResponseDTO> getActiveVehiclesByMake(String make);
-     List<VehicleResponseDTO> getActiveVehiclesByModel(String model);
-     List<VehicleResponseDTO> getActiveVehiclesByModelYear(Short modelYear);
-     List<VehicleResponseDTO> getActiveVehiclesPurchasedAfter(LocalDate date);
-     List<VehicleResponseDTO> getVehiclesByMakeAndModelYear(String make, Short modelYear);
-     List<VehicleResponseDTO> getVehiclesByModelAndModelYear(String model, Short modelYear);
      List<VehicleResponseDTO> getAllVehicles();
+     List<VehicleResponseDTO> searchVehicles(String plateNo, String vin, String make, String model, Short modelYear, Long ownershipTypeId, Boolean active, LocalDate purchasedAfter);
 }

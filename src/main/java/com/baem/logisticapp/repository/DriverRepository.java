@@ -2,6 +2,8 @@ package com.baem.logisticapp.repository;
 
 import com.baem.logisticapp.entity.Driver;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -31,4 +33,11 @@ public interface DriverRepository extends JpaRepository<Driver, Long> {
     Optional<Driver> findByEmail(String email);
 
     Optional<Driver> findByPhoneNumber(String phoneNumber);
+
+    // Consolidated search method with multiple filters
+    @Query("SELECT d FROM Driver d WHERE " +
+           "(:licenseNo IS NULL OR d.licenseNo = :licenseNo) AND " +
+           "(:active IS NULL OR d.isActive = :active)")
+    List<Driver> findDriversWithFilters(@Param("licenseNo") String licenseNo,
+                                       @Param("active") Boolean active);
 }

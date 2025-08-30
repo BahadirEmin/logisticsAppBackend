@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
+
 @Configuration
 @RequiredArgsConstructor
 public class DataInitializer {
@@ -34,37 +36,57 @@ public class DataInitializer {
         if (userRepository.findByUsername("sales").isEmpty()) {
             userRepository.save(User.builder()
                     .username("sales")
-                    .name("Satışçı User")
+                    .firstName("Ahmet")
+                    .lastName("Satış")
+                    .department("Satış")
+                    .phone("0532-111-1111")
+                    .hireDate(LocalDate.of(2023, 1, 15))
                     .email("sales@logistics.com")
                     .password(passwordEncoder.encode("sales123"))
                     .role(Role.SALES)
+                    .isActive(true)
                     .build());
         }
         if (userRepository.findByUsername("operation").isEmpty()) {
             userRepository.save(User.builder()
                     .username("operation")
-                    .name("Operasyon User")
+                    .firstName("Mehmet")
+                    .lastName("Operasyon")
+                    .department("Operasyon")
+                    .phone("0532-222-2222")
+                    .hireDate(LocalDate.of(2022, 6, 10))
                     .email("operation@logistics.com")
                     .password(passwordEncoder.encode("operation123"))
                     .role(Role.OPERATION)
+                    .isActive(true)
                     .build());
         }
         if (userRepository.findByUsername("fleet").isEmpty()) {
             userRepository.save(User.builder()
                     .username("fleet")
-                    .name("Filo Yöneticisi")
+                    .firstName("Ali")
+                    .lastName("Filo")
+                    .department("Filo Yönetimi")
+                    .phone("0532-333-3333")
+                    .hireDate(LocalDate.of(2021, 9, 5))
                     .email("fleet@logistics.com")
                     .password(passwordEncoder.encode("fleet123"))
                     .role(Role.FLEET)
+                    .isActive(true)
                     .build());
         }
         if (userRepository.findByUsername("admin").isEmpty()) {
             userRepository.save(User.builder()
                     .username("admin")
-                    .name("Admin User")
+                    .firstName("Fatma")
+                    .lastName("Admin")
+                    .department("Yönetim")
+                    .phone("0532-444-4444")
+                    .hireDate(LocalDate.of(2020, 3, 1))
                     .email("admin@logistics.com")
                     .password(passwordEncoder.encode("admin123"))
                     .role(Role.ADMIN)
+                    .isActive(true)
                     .build());
         }
     }

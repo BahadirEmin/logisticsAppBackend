@@ -47,40 +47,13 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/risk-status/{riskStatusId}")
-    public ResponseEntity<List<CustomerResponseDTO>> getCustomersByRiskStatus(@PathVariable Long riskStatusId) {
-        return ResponseEntity.ok(customerService.getCustomersByRiskStatus(riskStatusId));
-    }
-
-    @GetMapping("/blacklisted")
-    public ResponseEntity<List<CustomerResponseDTO>> getBlacklistedCustomers() {
-        return ResponseEntity.ok(customerService.getBlacklistedCustomers());
-    }
-
-    @GetMapping("/in-lawsuit")
-    public ResponseEntity<List<CustomerResponseDTO>> getCustomersInLawsuit() {
-        return ResponseEntity.ok(customerService.getCustomersInLawsuit());
-    }
-
-    @GetMapping("/tax/{taxNo}")
-    public ResponseEntity<CustomerResponseDTO> getCustomerByTaxNo(@PathVariable String taxNo) {
-        return ResponseEntity.ok(customerService.getCustomerByTaxNo(taxNo));
-    }
-
     @GetMapping("/search")
-    public ResponseEntity<List<CustomerResponseDTO>> searchCustomersByName(@RequestParam String name) {
-        return ResponseEntity.ok(customerService.searchCustomersByName(name));
-    }
-
-    @GetMapping("/risk-status/{riskStatusId}/blacklisted")
-    public ResponseEntity<List<CustomerResponseDTO>> getBlacklistedCustomersByRiskStatus(
-            @PathVariable Long riskStatusId) {
-        return ResponseEntity.ok(customerService.getBlacklistedCustomersByRiskStatus(riskStatusId));
-    }
-
-    @GetMapping("/risk-status/{riskStatusId}/in-lawsuit")
-    public ResponseEntity<List<CustomerResponseDTO>> getCustomersInLawsuitByRiskStatus(
-            @PathVariable Long riskStatusId) {
-        return ResponseEntity.ok(customerService.getCustomersInLawsuitByRiskStatus(riskStatusId));
+    public ResponseEntity<List<CustomerResponseDTO>> searchCustomers(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long riskStatusId,
+            @RequestParam(required = false) Boolean blacklisted,
+            @RequestParam(required = false) Boolean inLawsuit,
+            @RequestParam(required = false) String taxNo) {
+        return ResponseEntity.ok(customerService.searchCustomers(name, riskStatusId, blacklisted, inLawsuit, taxNo));
     }
 }

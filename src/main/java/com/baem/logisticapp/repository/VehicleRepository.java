@@ -2,6 +2,8 @@ package com.baem.logisticapp.repository;
 
 import com.baem.logisticapp.entity.Vehicle;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -17,51 +19,28 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     // VIN ile araç bulma
     Optional<Vehicle> findByVin(String vin);
 
-    // Make ve model ile araç bulma
-    List<Vehicle> findByMakeAndModel(String make, String model);
-
-    // Aktif araç bulma
-    List<Vehicle> findByIsActiveTrue();
-
-    // Ownership type ile araç bulma
-    List<Vehicle> findByOwnershipTypeId(Long ownershipTypeId);
-
-    // Model year ile araç bulma
-    List<Vehicle> findByModelYear(Short modelYear);
-
-    // Satın alma tarihine göre araç bulma
-    List<Vehicle> findByPurchaseDateAfter(LocalDate date);
-
     // Plate number ile araç var mı kontrol etme
     boolean existsByPlateNo(String plateNo);
 
     // VIN ile araç var mı kontrol etme
     boolean existsByVin(String vin);
 
-    // Make ile araç bulma
-    List<Vehicle> findByMake(String make);
-
-    // Model ile araç bulma
-    List<Vehicle> findByModel(String model);
-
-    // Ownership type ve aktiflik durumuna göre araç bulma
-    List<Vehicle> findByOwnershipTypeIdAndIsActiveTrue(Long ownershipTypeId);
-
-    // Make ve aktiflik durumuna göre araç bulma
-    List<Vehicle> findByMakeAndIsActiveTrue(String make);
-
-    // Model ve aktiflik durumuna göre araç bulma
-    List<Vehicle> findByModelAndIsActiveTrue(String model);
-
-    // Model year ve aktiflik durumuna göre araç bulma
-    List<Vehicle> findByModelYearAndIsActiveTrue(Short modelYear);
-
-    // Belirli bir tarihten sonra satın alınan aktif araçlar
-    List<Vehicle> findByPurchaseDateAfterAndIsActiveTrue(LocalDate date);
-
-    // Make ve model year ile araç bulma
-    List<Vehicle> findByMakeAndModelYear(String make, Short modelYear);
-
-    // Model ve model year ile araç bulma
-    List<Vehicle> findByModelAndModelYear(String model, Short modelYear);
+    // Consolidated search method with multiple filters
+    @Query("SELECT v FROM Vehicle v WHERE " +
+           "(:plateNo IS NULL OR v.plateNo = :plateNo) AND " +
+           "(:vin IS NULL OR v.vin = :vin) AND " +
+           "(:make IS NULL OR LOWER(v.make) LIKE LOWER(CONCAT('%', :make, '%'))) AND " +
+           "(:model IS NULL OR LOWER(v.model) LIKE LOWER(CONCAT('%', :model, '%'))) AND " +
+           "(:modelYear IS NULL OR v.modelYear = :modelYear) AND " +
+           "(:ownershipTypeId IS NULL OR v.ownershipType.id = :ownershipTypeId) AND " +
+           "(:active IS NULL OR v.isActive = :active) AND " +
+           "(:purchasedAfter IS NULL OR v.purchaseDate > :purchasedAfter)")
+    List<Vehicle> findVehiclesWithFilters(@Param("plateNo") String plateNo,
+                                        @Param("vin") String vin,
+                                        @Param("make") String make,
+                                        @Param("model") String model,
+                                        @Param("modelYear") Short modelYear,
+                                        @Param("ownershipTypeId") Long ownershipTypeId,
+                                        @Param("active") Boolean active,
+                                        @Param("purchasedAfter") LocalDate purchasedAfter);
 }

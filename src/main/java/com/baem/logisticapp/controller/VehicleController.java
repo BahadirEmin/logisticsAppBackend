@@ -49,92 +49,16 @@ public class VehicleController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/active")
-    public ResponseEntity<List<VehicleResponseDTO>> getActiveVehicles() {
-        return ResponseEntity.ok(vehicleService.getActiveVehicles());
-    }
-
-    @GetMapping("/plate/{plateNo}")
-    public ResponseEntity<VehicleResponseDTO> getVehicleByPlateNo(@PathVariable String plateNo) {
-        return ResponseEntity.ok(vehicleService.getVehicleByPlateNo(plateNo));
-    }
-
-    @GetMapping("/vin/{vin}")
-    public ResponseEntity<VehicleResponseDTO> getVehicleByVin(@PathVariable String vin) {
-        return ResponseEntity.ok(vehicleService.getVehicleByVin(vin));
-    }
-
-    @GetMapping("/make/{make}/model/{model}")
-    public ResponseEntity<List<VehicleResponseDTO>> getVehiclesByMakeAndModel(
-            @PathVariable String make,
-            @PathVariable String model) {
-        return ResponseEntity.ok(vehicleService.getVehiclesByMakeAndModel(make, model));
-    }
-
-    @GetMapping("/ownership-type/{ownershipTypeId}")
-    public ResponseEntity<List<VehicleResponseDTO>> getVehiclesByOwnershipType(@PathVariable Long ownershipTypeId) {
-        return ResponseEntity.ok(vehicleService.getVehiclesByOwnershipType(ownershipTypeId));
-    }
-
-    @GetMapping("/model-year/{modelYear}")
-    public ResponseEntity<List<VehicleResponseDTO>> getVehiclesByModelYear(@PathVariable Short modelYear) {
-        return ResponseEntity.ok(vehicleService.getVehiclesByModelYear(modelYear));
-    }
-
-    @GetMapping("/purchased-after")
-    public ResponseEntity<List<VehicleResponseDTO>> getVehiclesPurchasedAfter(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return ResponseEntity.ok(vehicleService.getVehiclesPurchasedAfter(date));
-    }
-
-    @GetMapping("/make/{make}")
-    public ResponseEntity<List<VehicleResponseDTO>> getVehiclesByMake(@PathVariable String make) {
-        return ResponseEntity.ok(vehicleService.getVehiclesByMake(make));
-    }
-
-    @GetMapping("/model/{model}")
-    public ResponseEntity<List<VehicleResponseDTO>> getVehiclesByModel(@PathVariable String model) {
-        return ResponseEntity.ok(vehicleService.getVehiclesByModel(model));
-    }
-
-    @GetMapping("/active/ownership-type/{ownershipTypeId}")
-    public ResponseEntity<List<VehicleResponseDTO>> getActiveVehiclesByOwnershipType(
-            @PathVariable Long ownershipTypeId) {
-        return ResponseEntity.ok(vehicleService.getActiveVehiclesByOwnershipType(ownershipTypeId));
-    }
-
-    @GetMapping("/active/make/{make}")
-    public ResponseEntity<List<VehicleResponseDTO>> getActiveVehiclesByMake(@PathVariable String make) {
-        return ResponseEntity.ok(vehicleService.getActiveVehiclesByMake(make));
-    }
-
-    @GetMapping("/active/model/{model}")
-    public ResponseEntity<List<VehicleResponseDTO>> getActiveVehiclesByModel(@PathVariable String model) {
-        return ResponseEntity.ok(vehicleService.getActiveVehiclesByModel(model));
-    }
-
-    @GetMapping("/active/model-year/{modelYear}")
-    public ResponseEntity<List<VehicleResponseDTO>> getActiveVehiclesByModelYear(@PathVariable Short modelYear) {
-        return ResponseEntity.ok(vehicleService.getActiveVehiclesByModelYear(modelYear));
-    }
-
-    @GetMapping("/active/purchased-after")
-    public ResponseEntity<List<VehicleResponseDTO>> getActiveVehiclesPurchasedAfter(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return ResponseEntity.ok(vehicleService.getActiveVehiclesPurchasedAfter(date));
-    }
-
-    @GetMapping("/make/{make}/model-year/{modelYear}")
-    public ResponseEntity<List<VehicleResponseDTO>> getVehiclesByMakeAndModelYear(
-            @PathVariable String make,
-            @PathVariable Short modelYear) {
-        return ResponseEntity.ok(vehicleService.getVehiclesByMakeAndModelYear(make, modelYear));
-    }
-
-    @GetMapping("/model/{model}/model-year/{modelYear}")
-    public ResponseEntity<List<VehicleResponseDTO>> getVehiclesByModelAndModelYear(
-            @PathVariable String model,
-            @PathVariable Short modelYear) {
-        return ResponseEntity.ok(vehicleService.getVehiclesByModelAndModelYear(model, modelYear));
+    @GetMapping("/search")
+    public ResponseEntity<List<VehicleResponseDTO>> searchVehicles(
+            @RequestParam(required = false) String plateNo,
+            @RequestParam(required = false) String vin,
+            @RequestParam(required = false) String make,
+            @RequestParam(required = false) String model,
+            @RequestParam(required = false) Short modelYear,
+            @RequestParam(required = false) Long ownershipTypeId,
+            @RequestParam(required = false) Boolean active,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate purchasedAfter) {
+        return ResponseEntity.ok(vehicleService.searchVehicles(plateNo, vin, make, model, modelYear, ownershipTypeId, active, purchasedAfter));
     }
 }

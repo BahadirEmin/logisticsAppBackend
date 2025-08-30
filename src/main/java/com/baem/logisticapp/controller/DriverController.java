@@ -47,13 +47,10 @@ public class DriverController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/active")
-    public ResponseEntity<List<DriverResponseDTO>> getActiveDrivers() {
-        return ResponseEntity.ok(driverService.getActiveDrivers());
-    }
-
-    @GetMapping("/license/{licenseNo}")
-    public ResponseEntity<DriverResponseDTO> getDriverByLicenseNo(@PathVariable String licenseNo) {
-        return ResponseEntity.ok(driverService.getDriverByLicenseNo(licenseNo));
+    @GetMapping("/search")
+    public ResponseEntity<List<DriverResponseDTO>> searchDrivers(
+            @RequestParam(required = false) String licenseNo,
+            @RequestParam(required = false) Boolean active) {
+        return ResponseEntity.ok(driverService.searchDrivers(licenseNo, active));
     }
 }

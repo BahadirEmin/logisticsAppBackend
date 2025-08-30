@@ -2,6 +2,8 @@ package com.baem.logisticapp.repository;
 
 import com.baem.logisticapp.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,9 +35,16 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
         return taxNo != null && !taxNo.trim().isEmpty() && existsByTaxNo(taxNo);
     }
 
-    // Risk durumu ve kara liste durumuna göre müşterileri bulma
-    List<Customer> findByRiskStatusIdAndIsBlacklistedTrue(Long riskStatusId);
-
-    // Risk durumu ve dava durumuna göre müşterileri bulma
-    List<Customer> findByRiskStatusIdAndIsInLawsuitTrue(Long riskStatusId);
+    // Consolidated search method with multiple filters
+    @Query("SELECT c FROM Customer c WHERE " +
+           "(:name IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
+           "(:riskStatusId IS NULL OR c.riskStatus.id = :riskStatusId) AND " +
+           "(:blacklisted IS NULL OR c.isBlacklisted = :blacklisted) AND " +
+           "(:inLawsuit IS NULL OR c.isInLawsuit = :inLawsuit) AND " +
+           "(:taxNo IS NULL OR c.taxNo = :taxNo)")
+    List<Customer> findCustomersWithFilters(@Param("name") String name, 
+                                          @Param("riskStatusId") Long riskStatusId,
+                                          @Param("blacklisted") Boolean blacklisted,
+                                          @Param("inLawsuit") Boolean inLawsuit,
+                                          @Param("taxNo") String taxNo);
 }

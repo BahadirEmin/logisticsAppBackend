@@ -17,6 +17,4 @@ public interface CustomerRiskStatusService {
     CustomerRiskStatusResponseDTO updateRiskStatus(Long id, CustomerRiskStatusUpdateDTO updateDTO);
 
     void deleteRiskStatus(Long id);
-
-    CustomerRiskStatusResponseDTO getRiskStatusByName(String statusName);
 }

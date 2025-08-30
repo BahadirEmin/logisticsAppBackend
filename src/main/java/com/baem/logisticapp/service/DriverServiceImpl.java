@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,45 +82,8 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public List<DriverResponseDTO> getActiveDrivers() {
-        return driverRepository.findByIsActiveTrue().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public DriverResponseDTO getDriverByLicenseNo(String licenseNo) {
-        return driverRepository.findByLicenseNo(licenseNo)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
-    }
-
-
-
-    @Override
-    public List<DriverResponseDTO> getDriversByLicenseClass(String licenseClass) {
-        return driverRepository.findByLicenseClass(licenseClass).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DriverResponseDTO> getDriversWithExpiringPassport(LocalDate expiryDate) {
-        return driverRepository.findByPassportExpiryBefore(expiryDate).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DriverResponseDTO> getDriversWithExpiringVisa(LocalDate expiryDate) {
-        return driverRepository.findByVisaExpiryBefore(expiryDate).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DriverResponseDTO> getDriversWithExpiringResidencePermit(LocalDate expiryDate) {
-        return driverRepository.findByResidencePermitExpiryBefore(expiryDate).stream()
+    public List<DriverResponseDTO> searchDrivers(String licenseNo, Boolean active) {
+        return driverRepository.findDriversWithFilters(licenseNo, active).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
