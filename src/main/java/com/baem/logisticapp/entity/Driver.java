@@ -53,4 +53,13 @@ public class Driver {
     public String getFullName() {
         return firstName + " " + lastName;
     }
+
+    // Alert sistemi için convenience methods
+    public LocalDate getVisaExpiryDate() {
+        return visaExpiry;
+    }
+    
+    public LocalDate getLicenseExpiryDate() {
+        return passportExpiry; // Bu license için kullanılabilir veya ayrı bir licenseExpiry field'ı eklenebilir
+    }
 }

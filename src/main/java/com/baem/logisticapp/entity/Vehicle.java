@@ -36,4 +36,21 @@ public class Vehicle {
 
     @Builder.Default
     private Boolean isActive = true;
+
+    // Alert sistemi için gerekli field'lar
+    private LocalDate inspectionExpiryDate; // Muayene bitiş tarihi
+    private LocalDate insuranceExpiryDate;  // Sigorta bitiş tarihi
+
+    // Alert sistemi için convenience methods
+    public String getLicensePlate() {
+        return plateNo;
+    }
+
+    public String getBrand() {
+        return make;
+    }
+
+    public LocalDate getInspectionExpiryDate() {
+        return inspectionExpiryDate;
+    }
 }
