@@ -1,14 +1,7 @@
 package com.baem.logisticapp.config;
 
-import com.baem.logisticapp.entity.CountryCode;
-import com.baem.logisticapp.entity.CustomerRiskStatus;
-import com.baem.logisticapp.entity.Role;
-import com.baem.logisticapp.entity.User;
-import com.baem.logisticapp.entity.VehicleOwnershipType;
-import com.baem.logisticapp.repository.CountryCodeRepository;
-import com.baem.logisticapp.repository.CustomerRiskStatusRepository;
-import com.baem.logisticapp.repository.UserRepository;
-import com.baem.logisticapp.repository.VehicleOwnershipTypeRepository;
+import com.baem.logisticapp.entity.*;
+import com.baem.logisticapp.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
