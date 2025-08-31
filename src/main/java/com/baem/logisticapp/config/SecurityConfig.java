@@ -29,8 +29,21 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> response.sendError(401, "Unauthorized"))
+                        .accessDeniedHandler((request, response, accessDeniedException) -> response.sendError(403, "Forbidden"))
+                )
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()) // Security disabled temporarily for testing
+                        .requestMatchers(
+                                "/api/auth/login",
+                                "/swagger-ui.html", "/swagger-ui/**",
+                                "/v3/api-docs/**", "/api-docs/**",
+                                "/v3/api-docs"
+                        )
+                        .permitAll()
+                        .requestMatchers("/api/v1/vehicles/**").hasAnyRole("FLEET", "ADMIN")
+                        .requestMatchers("/api/v1/trailers/**").hasAnyRole("FLEET", "ADMIN")
+                        .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
