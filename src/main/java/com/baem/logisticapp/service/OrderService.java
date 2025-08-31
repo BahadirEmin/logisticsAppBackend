@@ -18,18 +18,22 @@ public interface OrderService {
 
     void deleteOrder(Long id);
 
-    List<OrderResponseDTO> searchOrders(Long customerId, Long salesPersonId, Long fleetPersonId, String tripStatus);
+    List<OrderResponseDTO> searchOrders(Long customerId, Long salesPersonId, Long fleetPersonId, Long operationPersonId,
+            String tripStatus);
 
     OrderResponseDTO assignToOperation(Long orderId, Long operationPersonId);
 
     OrderResponseDTO assignToFleet(Long orderId, Long fleetPersonId);
-    
+
     // Yeni metodlar
     OrderResponseDTO approveQuote(Long orderId, Long approverUserId);
-    
+
     OrderResponseDTO cancelQuote(Long orderId, Long cancelerUserId);
-    
-    OrderResponseDTO assignToOperationByOperation(Long orderId, Long newOperationPersonId, Long currentOperationPersonId);
-    
+
+    OrderResponseDTO assignToOperationByOperation(Long orderId, Long newOperationPersonId,
+            Long currentOperationPersonId);
+
     OrderResponseDTO assignFleet(Long orderId, Long vehicleId, Long trailerId, Long driverId);
+
+    List<OrderResponseDTO> getOrdersByOperationPerson(Long operationPersonId);
 }

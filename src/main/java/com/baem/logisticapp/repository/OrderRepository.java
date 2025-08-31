@@ -54,14 +54,16 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // Consolidated search method with multiple filters
     @Query("SELECT o FROM Order o WHERE " +
-           "(:customerId IS NULL OR o.customer.id = :customerId) AND " +
-           "(:salesPersonId IS NULL OR o.salesPerson.id = :salesPersonId) AND " +
-           "(:fleetPersonId IS NULL OR o.fleetPerson.id = :fleetPersonId) AND " +
-           "(:tripStatus IS NULL OR LOWER(CAST(o.tripStatus AS string)) = LOWER(:tripStatus))")
+            "(:customerId IS NULL OR o.customer.id = :customerId) AND " +
+            "(:salesPersonId IS NULL OR o.salesPerson.id = :salesPersonId) AND " +
+            "(:fleetPersonId IS NULL OR o.fleetPerson.id = :fleetPersonId) AND " +
+            "(:operationPersonId IS NULL OR o.operationPerson.id = :operationPersonId) AND " +
+            "(:tripStatus IS NULL OR o.tripStatus = :tripStatus)")
     List<Order> findOrdersWithFilters(@Param("customerId") Long customerId,
-                                    @Param("salesPersonId") Long salesPersonId,
-                                    @Param("fleetPersonId") Long fleetPersonId,
-                                    @Param("tripStatus") String tripStatus);
+            @Param("salesPersonId") Long salesPersonId,
+            @Param("fleetPersonId") Long fleetPersonId,
+            @Param("operationPersonId") Long operationPersonId,
+            @Param("tripStatus") TripStatus tripStatus);
 
     // Order number pattern'ına göre sayım (sequence number için)
     Long countByOrderNumberLike(String pattern);
