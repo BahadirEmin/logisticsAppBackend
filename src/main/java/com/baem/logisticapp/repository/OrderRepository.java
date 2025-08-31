@@ -62,4 +62,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
                                     @Param("salesPersonId") Long salesPersonId,
                                     @Param("fleetPersonId") Long fleetPersonId,
                                     @Param("tripStatus") String tripStatus);
+
+    // Order number pattern'ına göre sayım (sequence number için)
+    Long countByOrderNumberLike(String pattern);
+
+    // Order number ile sipariş bulma (benzersizlik kontrolü için)
+    Optional<Order> findByOrderNumber(String orderNumber);
 }

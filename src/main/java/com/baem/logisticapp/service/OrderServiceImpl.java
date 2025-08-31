@@ -10,8 +10,9 @@ import com.baem.logisticapp.validator.OrderValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -24,6 +25,7 @@ public class OrderServiceImpl implements OrderService {
     private final VehicleRepository vehicleRepository;
     private final TrailerRepository trailerRepository;
     private final DriverRepository driverRepository;
+    private final CountryCodeRepository countryCodeRepository;
     private final OrderValidator orderValidator;
 
     @Override
@@ -62,8 +64,12 @@ public class OrderServiceImpl implements OrderService {
 
         // Sefer numarası oluştur
         String tripNumber = generateTripNumber();
+        
+        // Mantıklı sipariş numarası oluştur
+        String orderNumber = generateOrderNumber(createDTO.getDepartureCountry());
 
         Order order = Order.builder()
+                .orderNumber(orderNumber)
                 .customer(customer)
                 .departureCountry(createDTO.getDepartureCountry())
                 .departureCity(createDTO.getDepartureCity())
@@ -192,6 +198,44 @@ public class OrderServiceImpl implements OrderService {
     private String generateTripNumber() {
         // Basit bir sefer numarası oluşturma: SF + timestamp
         return "SF" + System.currentTimeMillis();
+    }
+
+    // Mantıklı sipariş numarası oluşturma metodu (16 hane: YYMMDDCCSSSSSSSS)
+    private String generateOrderNumber(String departureCountry) {
+        LocalDate today = LocalDate.now();
+        
+        // Tarih formatı: YYMMDD
+        String datePrefix = today.format(DateTimeFormatter.ofPattern("yyMMdd"));
+        
+        // Ülke kodu al (2 hane)
+        String countryCode = getCountryCode(departureCountry);
+        
+        // Günlük sequence number (8 hane)
+        String sequenceNumber = getDailySequenceNumber(datePrefix, countryCode);
+        
+        // 16 haneli sipariş numarası: YYMMDDCCSSSSSSSS
+        return datePrefix + countryCode + sequenceNumber;
+    }
+    
+    // Ülke kodunu veritabanından getir
+    private String getCountryCode(String country) {
+        if (country == null) return "00";
+        
+        // Önce veritabanından ülke kodunu bul
+        return countryCodeRepository.findByAnyCountryName(country.trim())
+                .map(CountryCode::getCountryCodeNumeric)
+                .orElse("00"); // Varsayılan kod
+    }
+    
+    // Günlük sequence number oluştur (8 haneli: 00000001-99999999)
+    private String getDailySequenceNumber(String datePrefix, String countryCode) {
+        // Aynı gün ve ülke için kaç order var kontrol et
+        String pattern = datePrefix + countryCode + "%";
+        Long count = orderRepository.countByOrderNumberLike(pattern);
+        
+        // Sequence number: 00000001, 00000002, 00000003...
+        long nextSequence = count + 1;
+        return String.format("%08d", nextSequence);
     }
 
     // Teklif onaylama metodu
@@ -326,6 +370,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderResponseDTO convertToDTO(Order order) {
         return OrderResponseDTO.builder()
                 .id(order.getId())
+                .orderNumber(order.getOrderNumber())
                 .customerId(order.getCustomer().getId())
                 .customerName(order.getCustomer().getName())
                 .departureCountry(order.getDepartureCountry())

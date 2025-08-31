@@ -18,6 +18,9 @@ public class OrderResponseDTO {
 
     private Long id;
 
+    // Mantıklı sipariş numarası (16 haneli: YYMMDDCCSSSSSSSS)
+    private String orderNumber;
+
     // Müşteri bilgileri
     private Long customerId;
     private String customerName;
