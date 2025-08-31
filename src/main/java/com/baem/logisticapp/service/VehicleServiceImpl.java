@@ -8,6 +8,7 @@ import com.baem.logisticapp.entity.VehicleOwnershipType;
 import com.baem.logisticapp.exception.ResourceNotFoundException;
 import com.baem.logisticapp.repository.VehicleOwnershipTypeRepository;
 import com.baem.logisticapp.repository.VehicleRepository;
+import com.baem.logisticapp.validator.VehicleValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +22,11 @@ public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
     private final VehicleOwnershipTypeRepository vehicleOwnershipTypeRepository;
+    private final VehicleValidator vehicleValidator;
 
     @Override
     public VehicleResponseDTO createVehicle(VehicleCreateDTO createDTO) {
-        // Check if vehicle with same plate number already exists
-        if (vehicleRepository.existsByPlateNo(createDTO.getPlateNo())) {
-            throw new IllegalArgumentException(
-                    "Vehicle with plate number " + createDTO.getPlateNo() + " already exists");
-        }
-
-        // Check if vehicle with same VIN already exists
-        if (vehicleRepository.existsByVin(createDTO.getVin())) {
-            throw new IllegalArgumentException("Vehicle with VIN " + createDTO.getVin() + " already exists");
-        }
+        vehicleValidator.validateForCreate(createDTO);
 
         // Get ownership type
         VehicleOwnershipType ownershipType = vehicleOwnershipTypeRepository.findById(createDTO.getOwnershipTypeId())
@@ -72,18 +65,7 @@ public class VehicleServiceImpl implements VehicleService {
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
 
-        // Check if plate number is being changed and if it already exists
-        if (!vehicle.getPlateNo().equals(updateDTO.getPlateNo()) &&
-                vehicleRepository.existsByPlateNo(updateDTO.getPlateNo())) {
-            throw new IllegalArgumentException(
-                    "Vehicle with plate number " + updateDTO.getPlateNo() + " already exists");
-        }
-
-        // Check if VIN is being changed and if it already exists
-        if (!vehicle.getVin().equals(updateDTO.getVin()) &&
-                vehicleRepository.existsByVin(updateDTO.getVin())) {
-            throw new IllegalArgumentException("Vehicle with VIN " + updateDTO.getVin() + " already exists");
-        }
+        vehicleValidator.validateForUpdate(updateDTO, vehicle.getPlateNo(), vehicle.getVin());
 
         // Get ownership type
         VehicleOwnershipType ownershipType = vehicleOwnershipTypeRepository.findById(updateDTO.getOwnershipTypeId())

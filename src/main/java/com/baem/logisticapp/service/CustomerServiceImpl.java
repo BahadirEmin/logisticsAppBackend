@@ -8,25 +8,30 @@ import com.baem.logisticapp.entity.CustomerRiskStatus;
 import com.baem.logisticapp.repository.CustomerRepository;
 import com.baem.logisticapp.repository.CustomerRiskStatusRepository;
 import com.baem.logisticapp.exception.ResourceNotFoundException;
-import lombok.RequiredArgsConstructor;
+import com.baem.logisticapp.validator.CustomerValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerRiskStatusRepository customerRiskStatusRepository;
+    private final CustomerValidator customerValidator;
+    
+    public CustomerServiceImpl(CustomerRepository customerRepository, 
+                               CustomerRiskStatusRepository customerRiskStatusRepository,
+                               CustomerValidator customerValidator) {
+        this.customerRepository = customerRepository;
+        this.customerRiskStatusRepository = customerRiskStatusRepository;
+        this.customerValidator = customerValidator;
+    }
 
     @Override
     public CustomerResponseDTO createCustomer(CustomerCreateDTO createDTO) {
-        // Check if customer with same tax number already exists (only if taxNo is
-        // provided)
-        if (customerRepository.existsByTaxNoSafe(createDTO.getTaxNo())) {
-            throw new IllegalArgumentException("Customer with tax number " + createDTO.getTaxNo() + " already exists");
-        }
+        // Use validator for validation
+        customerValidator.validateForCreate(createDTO);
 
         // Get risk status
         CustomerRiskStatus riskStatus = customerRiskStatusRepository.findById(createDTO.getRiskStatusId())
@@ -66,16 +71,8 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
 
-        // Check if tax number is being changed and if it already exists (only if taxNo
-        // is provided)
-        String currentTaxNo = customer.getTaxNo();
-        String newTaxNo = updateDTO.getTaxNo();
-
-        if (newTaxNo != null && !newTaxNo.trim().isEmpty() &&
-                !newTaxNo.equals(currentTaxNo) &&
-                customerRepository.existsByTaxNoSafe(newTaxNo)) {
-            throw new IllegalArgumentException("Customer with tax number " + newTaxNo + " already exists");
-        }
+        // Use validator for validation
+        customerValidator.validateForUpdate(id, updateDTO);
 
         // Get risk status
         CustomerRiskStatus riskStatus = customerRiskStatusRepository.findById(updateDTO.getRiskStatusId())

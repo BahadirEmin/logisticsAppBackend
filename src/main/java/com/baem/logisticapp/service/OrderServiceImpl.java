@@ -6,10 +6,12 @@ import com.baem.logisticapp.dto.OrderUpdateDTO;
 import com.baem.logisticapp.entity.*;
 import com.baem.logisticapp.exception.ResourceNotFoundException;
 import com.baem.logisticapp.repository.*;
+import com.baem.logisticapp.validator.OrderValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -22,9 +24,12 @@ public class OrderServiceImpl implements OrderService {
     private final VehicleRepository vehicleRepository;
     private final TrailerRepository trailerRepository;
     private final DriverRepository driverRepository;
+    private final OrderValidator orderValidator;
 
     @Override
     public OrderResponseDTO createOrder(OrderCreateDTO createDTO) {
+        orderValidator.validateForCreate(createDTO);
+
         // Customer'ı bul
         Customer customer = customerRepository.findById(createDTO.getCustomerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));

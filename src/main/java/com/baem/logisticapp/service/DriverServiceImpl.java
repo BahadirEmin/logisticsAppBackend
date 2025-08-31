@@ -6,7 +6,7 @@ import com.baem.logisticapp.dto.DriverUpdateDTO;
 import com.baem.logisticapp.entity.Driver;
 import com.baem.logisticapp.repository.DriverRepository;
 import com.baem.logisticapp.exception.ResourceNotFoundException;
-import lombok.RequiredArgsConstructor;
+import com.baem.logisticapp.validator.DriverValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,24 +14,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class DriverServiceImpl implements DriverService {
 
     private final DriverRepository driverRepository;
+    private final DriverValidator driverValidator;
+    
+    public DriverServiceImpl(DriverRepository driverRepository, DriverValidator driverValidator) {
+        this.driverRepository = driverRepository;
+        this.driverValidator = driverValidator;
+    }
 
     @Override
     public DriverResponseDTO createDriver(DriverCreateDTO createDTO) {
+        // Use validator for validation
+        driverValidator.validateForCreate(createDTO);
+
         Driver driver = Driver.builder()
-                .firstName(createDTO.getFirstName())
-                .lastName(createDTO.getLastName())
-                .licenseNo(createDTO.getLicenseNo())
-                .licenseClass(createDTO.getLicenseClass())
+                .firstName(createDTO.getFirstName().trim())
+                .lastName(createDTO.getLastName().trim())
+                .licenseNo(createDTO.getLicenseNo().trim())
+                .licenseClass(createDTO.getLicenseClass().trim())
                 .passportExpiry(createDTO.getPassportExpiry())
                 .visaExpiry(createDTO.getVisaExpiry())
                 .residencePermitExpiry(createDTO.getResidencePermitExpiry())
-                .phoneNumber(createDTO.getPhoneNumber())
-                .email(createDTO.getEmail())
+                .phoneNumber(createDTO.getPhoneNumber().trim())
+                .email(createDTO.getEmail().trim())
                 .isActive(true)
                 .build();
 
@@ -57,15 +65,18 @@ public class DriverServiceImpl implements DriverService {
         Driver driver = driverRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
 
-        driver.setFirstName(updateDTO.getFirstName());
-        driver.setLastName(updateDTO.getLastName());
-        driver.setLicenseNo(updateDTO.getLicenseNo());
-        driver.setLicenseClass(updateDTO.getLicenseClass());
+        // Use validator for validation
+        driverValidator.validateForUpdate(id, updateDTO);
+
+        driver.setFirstName(updateDTO.getFirstName().trim());
+        driver.setLastName(updateDTO.getLastName().trim());
+        driver.setLicenseNo(updateDTO.getLicenseNo().trim());
+        driver.setLicenseClass(updateDTO.getLicenseClass().trim());
         driver.setPassportExpiry(updateDTO.getPassportExpiry());
         driver.setVisaExpiry(updateDTO.getVisaExpiry());
         driver.setResidencePermitExpiry(updateDTO.getResidencePermitExpiry());
-        driver.setPhoneNumber(updateDTO.getPhoneNumber());
-        driver.setEmail(updateDTO.getEmail());
+        driver.setPhoneNumber(updateDTO.getPhoneNumber().trim());
+        driver.setEmail(updateDTO.getEmail().trim());
         if (updateDTO.getIsActive() != null) {
             driver.setIsActive(updateDTO.getIsActive());
         }

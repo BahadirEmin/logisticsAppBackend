@@ -8,6 +8,7 @@ import com.baem.logisticapp.entity.VehicleOwnershipType;
 import com.baem.logisticapp.exception.ResourceNotFoundException;
 import com.baem.logisticapp.repository.TrailerRepository;
 import com.baem.logisticapp.repository.VehicleOwnershipTypeRepository;
+import com.baem.logisticapp.validator.TrailerValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +21,10 @@ public class TrailerServiceImpl implements TrailerService {
 
     private final TrailerRepository trailerRepository;
     private final VehicleOwnershipTypeRepository vehicleOwnershipTypeRepository;
+    private final TrailerValidator trailerValidator;
 
     public TrailerResponseDTO createTrailer(TrailerCreateDTO createDTO) {
-        // Check if trailer with same trailer number already exists
-        if (trailerRepository.existsByTrailerNo(createDTO.getTrailerNo())) {
-            throw new IllegalArgumentException("Trailer with number " + createDTO.getTrailerNo() + " already exists");
-        }
-
-        // Check if trailer with same VIN already exists
-        if (trailerRepository.existsByVin(createDTO.getVin())) {
-            throw new IllegalArgumentException("Trailer with VIN " + createDTO.getVin() + " already exists");
-        }
+        trailerValidator.validateForCreate(createDTO);
 
         // Get ownership type
         VehicleOwnershipType ownershipType = vehicleOwnershipTypeRepository.findById(createDTO.getOwnershipTypeId())
@@ -71,17 +65,7 @@ public class TrailerServiceImpl implements TrailerService {
         Trailer trailer = trailerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Trailer not found"));
 
-        // Check if trailer number is being changed and if it already exists
-        if (!trailer.getTrailerNo().equals(updateDTO.getTrailerNo()) &&
-                trailerRepository.existsByTrailerNo(updateDTO.getTrailerNo())) {
-            throw new IllegalArgumentException("Trailer with number " + updateDTO.getTrailerNo() + " already exists");
-        }
-
-        // Check if VIN is being changed and if it already exists
-        if (!trailer.getVin().equals(updateDTO.getVin()) &&
-                trailerRepository.existsByVin(updateDTO.getVin())) {
-            throw new IllegalArgumentException("Trailer with VIN " + updateDTO.getVin() + " already exists");
-        }
+        trailerValidator.validateForUpdate(updateDTO, trailer.getTrailerNo());
 
         // Get ownership type
         VehicleOwnershipType ownershipType = vehicleOwnershipTypeRepository.findById(updateDTO.getOwnershipTypeId())
