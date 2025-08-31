@@ -16,7 +16,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loggingInterceptor)
-                .addPathPatterns("/api/**")  // Sadece API endpoint'lerini logla
-                .excludePathPatterns("/api/auth/**"); // Auth endpoint'lerini exclude et (çok fazla log olmasın)
+                .addPathPatterns("/api/**");  // Tüm API endpoint'lerini logla (auth dahil)
     }
 }
