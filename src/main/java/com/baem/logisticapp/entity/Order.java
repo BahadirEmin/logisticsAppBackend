@@ -20,6 +20,10 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
+    // Mantıklı sipariş numarası (16 haneli: YYMMDDCCSSSSSSSS)
+    @Column(name = "order_number", unique = true, length = 16)
+    private String orderNumber;
+
     // Müşteri ilişkisi
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
