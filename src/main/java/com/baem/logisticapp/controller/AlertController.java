@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/alerts")
-@Tag(name = "Alerts", description = "Alert and Notification Management")
+@Tag(name = "08 - Alerts", description = "Alert and Notification Management")
 public class AlertController {
 
     private final AlertService alertService;
@@ -81,5 +81,12 @@ public class AlertController {
     public ResponseEntity<List<AlertResponseDTO>> getAlertsAssignedToUser(@PathVariable Long userId) {
         List<AlertResponseDTO> alerts = alertService.getAlertsAssignedToUser(userId);
         return ResponseEntity.ok(alerts);
+    }
+
+    @PostMapping("/manual-check")
+    @Operation(summary = "Manually trigger alert check (for testing)")
+    public ResponseEntity<String> manualAlertCheck() {
+        alertService.checkAndCreateAlerts();
+        return ResponseEntity.ok("Alert check triggered manually - check logs for details");
     }
 }

@@ -4,6 +4,7 @@ import com.baem.logisticapp.dto.CustomerCreateDTO;
 import com.baem.logisticapp.dto.CustomerResponseDTO;
 import com.baem.logisticapp.dto.CustomerUpdateDTO;
 import com.baem.logisticapp.service.CustomerService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/customers")
 @RequiredArgsConstructor
+@Tag(name = "02 - Customers", description = "Customer Management")
 public class CustomerController {
 
     private final CustomerService customerService;

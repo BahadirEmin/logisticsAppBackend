@@ -4,6 +4,7 @@ import com.baem.logisticapp.dto.CustomerRiskStatusCreateDTO;
 import com.baem.logisticapp.dto.CustomerRiskStatusResponseDTO;
 import com.baem.logisticapp.dto.CustomerRiskStatusUpdateDTO;
 import com.baem.logisticapp.service.CustomerRiskStatusService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/risk-statuses")
 @RequiredArgsConstructor
+@Tag(name = "03 - Customer Risk Status", description = "Customer Risk Status Management")
 public class CustomerRiskStatusController {
 
     private final CustomerRiskStatusService customerRiskStatusService;

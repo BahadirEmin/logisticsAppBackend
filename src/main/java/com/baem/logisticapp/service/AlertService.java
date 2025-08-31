@@ -9,6 +9,8 @@ import com.baem.logisticapp.repository.AlertRepository;
 import com.baem.logisticapp.repository.DriverRepository;
 import com.baem.logisticapp.repository.UserRepository;
 import com.baem.logisticapp.repository.VehicleRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class AlertService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AlertService.class);
 
     private final AlertRepository alertRepository;
     private final DriverRepository driverRepository;
@@ -141,15 +145,25 @@ public class AlertService {
     // Otomatik alert kontrol sistemi - her gün çalışır
     @Scheduled(cron = "0 0 8 * * ?") // Her gün sabah 8'de çalış
     public void checkAndCreateAlerts() {
-        checkDriverVisas();
-        checkDriverLicenses();
-        checkVehicleInspections();
+        logger.info("🔔 ALERT SYSTEM: Starting scheduled alert check at {}", LocalDateTime.now());
+        logger.info("📋 ALERT SYSTEM: Checking driver visas, licenses and vehicle inspections...");
+        
+        int totalCreated = 0;
+        totalCreated += checkDriverVisas();
+        totalCreated += checkDriverLicenses();
+        totalCreated += checkVehicleInspections();
+        
+        logger.info("✅ ALERT SYSTEM: Completed alert check. Total new alerts created: {}", totalCreated);
     }
 
-    private void checkDriverVisas() {
+    private int checkDriverVisas() {
+        logger.info("🚗 Checking driver visas...");
         List<Driver> drivers = driverRepository.findAll();
         LocalDate checkDate = LocalDate.now().plusDays(30); // 30 gün sonraya kadar kontrol et
+        int createdCount = 0;
 
+        logger.info("📊 Found {} drivers to check for visa expiry", drivers.size());
+        
         for (Driver driver : drivers) {
             if (driver.getVisaExpiryDate() != null && 
                 driver.getVisaExpiryDate().isBefore(checkDate)) {
@@ -161,14 +175,22 @@ public class AlertService {
                 
                 if (!hasVisaAlert) {
                     createDriverVisaAlert(driver.getId(), driver.getVisaExpiryDate());
+                    createdCount++;
+                    logger.info("📝 Created visa alert for driver: {} {} (expires: {})", 
+                        driver.getFirstName(), driver.getLastName(), driver.getVisaExpiryDate());
                 }
             }
         }
+        
+        logger.info("✅ Visa check completed. Created {} new alerts", createdCount);
+        return createdCount;
     }
 
-    private void checkDriverLicenses() {
+    private int checkDriverLicenses() {
+        logger.info("🪪 Checking driver licenses...");
         List<Driver> drivers = driverRepository.findAll();
         LocalDate checkDate = LocalDate.now().plusDays(30);
+        int createdCount = 0;
 
         for (Driver driver : drivers) {
             if (driver.getLicenseExpiryDate() != null && 
@@ -180,14 +202,22 @@ public class AlertService {
                 
                 if (!hasLicenseAlert) {
                     createDriverLicenseAlert(driver.getId(), driver.getLicenseExpiryDate());
+                    createdCount++;
+                    logger.info("📝 Created license alert for driver: {} (expires: {})", 
+                        driver.getFirstName() + " " + driver.getLastName(), driver.getLicenseExpiryDate());
                 }
             }
         }
+        
+        logger.info("✅ License check completed. Created {} new alerts", createdCount);
+        return createdCount;
     }
 
-    private void checkVehicleInspections() {
+    private int checkVehicleInspections() {
+        logger.info("🔧 Checking vehicle inspections...");
         List<Vehicle> vehicles = vehicleRepository.findAll();
         LocalDate checkDate = LocalDate.now().plusDays(15); // Araçlar için 15 gün
+        int createdCount = 0;
 
         for (Vehicle vehicle : vehicles) {
             if (vehicle.getInspectionExpiryDate() != null && 
@@ -199,9 +229,15 @@ public class AlertService {
                 
                 if (!hasInspectionAlert) {
                     createVehicleInspectionAlert(vehicle.getId(), vehicle.getInspectionExpiryDate());
+                    createdCount++;
+                    logger.info("📝 Created inspection alert for vehicle: {} {} (due: {})", 
+                        vehicle.getBrand(), vehicle.getModel(), vehicle.getInspectionExpiryDate());
                 }
             }
         }
+        
+        logger.info("✅ Vehicle inspection check completed. Created {} new alerts", createdCount);
+        return createdCount;
     }
 
     private Alert.AlertPriority determinePriority(LocalDate expiryDate) {

@@ -4,6 +4,7 @@ import com.baem.logisticapp.dto.DriverCreateDTO;
 import com.baem.logisticapp.dto.DriverResponseDTO;
 import com.baem.logisticapp.dto.DriverUpdateDTO;
 import com.baem.logisticapp.service.DriverService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/drivers")
 @RequiredArgsConstructor
+@Tag(name = "04 - Drivers", description = "Driver Management")
 public class DriverController {
 
     private final DriverService driverService;

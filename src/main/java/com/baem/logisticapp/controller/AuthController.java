@@ -7,6 +7,7 @@ import com.baem.logisticapp.entity.User;
 import com.baem.logisticapp.repository.UserRepository;
 import com.baem.logisticapp.security.JwtUtil;
 import com.baem.logisticapp.service.CustomUserDetailsService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "01 - Authentication", description = "Authentication and User Management")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;

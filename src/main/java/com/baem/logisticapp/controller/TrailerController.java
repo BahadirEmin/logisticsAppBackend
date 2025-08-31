@@ -4,6 +4,7 @@ import com.baem.logisticapp.dto.TrailerCreateDTO;
 import com.baem.logisticapp.dto.TrailerResponseDTO;
 import com.baem.logisticapp.dto.TrailerUpdateDTO;
 import com.baem.logisticapp.service.TrailerService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/trailers")
 @RequiredArgsConstructor
+@Tag(name = "06 - Trailers", description = "Trailer Management")
 public class TrailerController {
 
     private final TrailerService trailerService;

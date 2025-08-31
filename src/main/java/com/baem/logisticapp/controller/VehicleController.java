@@ -4,6 +4,7 @@ import com.baem.logisticapp.dto.VehicleCreateDTO;
 import com.baem.logisticapp.dto.VehicleResponseDTO;
 import com.baem.logisticapp.dto.VehicleUpdateDTO;
 import com.baem.logisticapp.service.VehicleService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/vehicles")
 @RequiredArgsConstructor
+@Tag(name = "05 - Vehicles", description = "Vehicle Management")
 public class VehicleController {
 
     private final VehicleService vehicleService;
