@@ -16,11 +16,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // Yeni eklenen alanlarla arama metodları
     List<User> findByDepartment(String department);
+
     List<User> findByRole(Role role);
+
     List<User> findByIsActive(Boolean isActive);
+
     List<User> findByDepartmentAndIsActive(String department, Boolean isActive);
+
     List<User> findByRoleAndIsActive(Role role, Boolean isActive);
+
     Optional<User> findByPhone(String phone);
+
+    Optional<User> findByEmail(String email);
 
     @Query("SELECT u FROM User u WHERE u.firstName LIKE %:name% OR u.lastName LIKE %:name%")
     List<User> findByNameContaining(@Param("name") String name);

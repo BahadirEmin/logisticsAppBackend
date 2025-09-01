@@ -64,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
 
         // Sefer numarası oluştur
         String tripNumber = generateTripNumber();
-        
+
         // Mantıklı sipariş numarası oluştur
         String orderNumber = generateOrderNumber(createDTO.getDepartureCountry());
 
@@ -160,8 +160,21 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponseDTO> searchOrders(Long customerId, Long salesPersonId, Long fleetPersonId, String tripStatus) {
-        return orderRepository.findOrdersWithFilters(customerId, salesPersonId, fleetPersonId, tripStatus).stream()
+    public List<OrderResponseDTO> searchOrders(Long customerId, Long salesPersonId, Long fleetPersonId,
+            Long operationPersonId, String tripStatus) {
+        TripStatus tripStatusEnum = null;
+        if (tripStatus != null && !tripStatus.trim().isEmpty()) {
+            try {
+                tripStatusEnum = TripStatus.valueOf(tripStatus.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // If the string doesn't match any enum value, return empty list
+                return List.of();
+            }
+        }
+
+        return orderRepository
+                .findOrdersWithFilters(customerId, salesPersonId, fleetPersonId, operationPersonId, tripStatusEnum)
+                .stream()
                 .map(this::convertToDTO)
                 .toList();
     }
@@ -203,36 +216,37 @@ public class OrderServiceImpl implements OrderService {
     // Mantıklı sipariş numarası oluşturma metodu (16 hane: YYMMDDCCSSSSSSSS)
     private String generateOrderNumber(String departureCountry) {
         LocalDate today = LocalDate.now();
-        
+
         // Tarih formatı: YYMMDD
         String datePrefix = today.format(DateTimeFormatter.ofPattern("yyMMdd"));
-        
+
         // Ülke kodu al (2 hane)
         String countryCode = getCountryCode(departureCountry);
-        
+
         // Günlük sequence number (8 hane)
         String sequenceNumber = getDailySequenceNumber(datePrefix, countryCode);
-        
+
         // 16 haneli sipariş numarası: YYMMDDCCSSSSSSSS
         return datePrefix + countryCode + sequenceNumber;
     }
-    
+
     // Ülke kodunu veritabanından getir
     private String getCountryCode(String country) {
-        if (country == null) return "00";
-        
+        if (country == null)
+            return "00";
+
         // Önce veritabanından ülke kodunu bul
         return countryCodeRepository.findByAnyCountryName(country.trim())
                 .map(CountryCode::getCountryCodeNumeric)
                 .orElse("00"); // Varsayılan kod
     }
-    
+
     // Günlük sequence number oluştur (8 haneli: 00000001-99999999)
     private String getDailySequenceNumber(String datePrefix, String countryCode) {
         // Aynı gün ve ülke için kaç order var kontrol et
         String pattern = datePrefix + countryCode + "%";
         Long count = orderRepository.countByOrderNumberLike(pattern);
-        
+
         // Sequence number: 00000001, 00000002, 00000003...
         long nextSequence = count + 1;
         return String.format("%08d", nextSequence);
@@ -286,7 +300,8 @@ public class OrderServiceImpl implements OrderService {
 
     // Operasyoncu atama metodu (operasyoncu kendi yerine başkasını atayabilir)
     @Override
-    public OrderResponseDTO assignToOperationByOperation(Long orderId, Long newOperationPersonId, Long currentOperationPersonId) {
+    public OrderResponseDTO assignToOperationByOperation(Long orderId, Long newOperationPersonId,
+            Long currentOperationPersonId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
@@ -398,13 +413,15 @@ public class OrderServiceImpl implements OrderService {
                 .salesPersonId(order.getSalesPerson() != null ? order.getSalesPerson().getId() : null)
                 .salesPersonName(order.getSalesPerson() != null ? order.getSalesPerson().getFullName() : null)
                 .operationPersonId(order.getOperationPerson() != null ? order.getOperationPerson().getId() : null)
-                .operationPersonName(order.getOperationPerson() != null ? order.getOperationPerson().getFullName() : null)
+                .operationPersonName(
+                        order.getOperationPerson() != null ? order.getOperationPerson().getFullName() : null)
                 .fleetPersonId(order.getFleetPerson() != null ? order.getFleetPerson().getId() : null)
                 .fleetPersonName(order.getFleetPerson() != null ? order.getFleetPerson().getFullName() : null)
                 .assignedTruckId(order.getAssignedTruck() != null ? order.getAssignedTruck().getId() : null)
                 .assignedTruckPlateNo(order.getAssignedTruck() != null ? order.getAssignedTruck().getPlateNo() : null)
                 .assignedTrailerId(order.getAssignedTrailer() != null ? order.getAssignedTrailer().getId() : null)
-                .assignedTrailerNo(order.getAssignedTrailer() != null ? order.getAssignedTrailer().getTrailerNo() : null)
+                .assignedTrailerNo(
+                        order.getAssignedTrailer() != null ? order.getAssignedTrailer().getTrailerNo() : null)
                 .assignedDriverId(order.getAssignedDriver() != null ? order.getAssignedDriver().getId() : null)
                 .assignedDriverName(order.getAssignedDriver() != null ? order.getAssignedDriver().getFullName() : null)
                 .quotePrice(order.getQuotePrice())
@@ -452,5 +469,11 @@ public class OrderServiceImpl implements OrderService {
 
         return convertToDTO(orderRepository.save(order));
     }
-}
 
+    @Override
+    public List<OrderResponseDTO> getOrdersByOperationPerson(Long operationPersonId) {
+        return orderRepository.findByOperationPersonId(operationPersonId).stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+}
