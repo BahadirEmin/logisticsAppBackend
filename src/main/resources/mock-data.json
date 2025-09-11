@@ -1,0 +1,445 @@
+{
+  "countryCodes": [
+    {
+      "countryName": "Turkey",
+      "countryNameTr": "Türkiye",
+      "countryCodeIso": "TR",
+      "countryCodeNumeric": "90",
+      "isActive": true
+    },
+    {
+      "countryName": "Germany",
+      "countryNameTr": "Almanya",
+      "countryCodeIso": "DE",
+      "countryCodeNumeric": "49",
+      "isActive": true
+    },
+    {
+      "countryName": "France",
+      "countryNameTr": "Fransa",
+      "countryCodeIso": "FR",
+      "countryCodeNumeric": "33",
+      "isActive": true
+    },
+    {
+      "countryName": "Italy",
+      "countryNameTr": "İtalya",
+      "countryCodeIso": "IT",
+      "countryCodeNumeric": "39",
+      "isActive": true
+    },
+    {
+      "countryName": "Netherlands",
+      "countryNameTr": "Hollanda",
+      "countryCodeIso": "NL",
+      "countryCodeNumeric": "31",
+      "isActive": true
+    }
+  ],
+  "currencies": [
+    {
+      "currencyCode": "TRY",
+      "name": "Turkish Lira",
+      "symbol": "₺"
+    },
+    {
+      "currencyCode": "USD",
+      "name": "US Dollar",
+      "symbol": "$"
+    },
+    {
+      "currencyCode": "EUR",
+      "name": "Euro",
+      "symbol": "€"
+    },
+    {
+      "currencyCode": "GBP",
+      "name": "British Pound",
+      "symbol": "£"
+    }
+  ],
+  "customerRiskStatuses": [
+    {
+      "statusName": "Düşük Risk"
+    },
+    {
+      "statusName": "Orta Risk"
+    },
+    {
+      "statusName": "Yüksek Risk"
+    },
+    {
+      "statusName": "Kara Liste"
+    }
+  ],
+  "vehicleOwnershipTypes": [
+    {
+      "ownershipName": "Özmal"
+    },
+    {
+      "ownershipName": "Kiralık"
+    },
+    {
+      "ownershipName": "Spedisyon"
+    }
+  ],
+  "users": [
+    {
+      "username": "admin",
+      "firstName": "Admin",
+      "lastName": "User",
+      "department": "IT",
+      "phone": "+90 555 000 0001",
+      "hireDate": "2020-01-15",
+      "isActive": true,
+      "canApproveQuotes": true,
+      "email": "admin@logistics.com",
+      "password": "$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi",
+      "role": "ADMIN"
+    },
+    {
+      "username": "ahmet.satis",
+      "firstName": "Ahmet",
+      "lastName": "Yılmaz",
+      "department": "Satış",
+      "phone": "+90 555 000 0002",
+      "hireDate": "2021-03-10",
+      "isActive": true,
+      "canApproveQuotes": true,
+      "email": "ahmet.yilmaz@logistics.com",
+      "password": "$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi",
+      "role": "SALES"
+    },
+    {
+      "username": "mehmet.operasyon",
+      "firstName": "Mehmet",
+      "lastName": "Demir",
+      "department": "Operasyon",
+      "phone": "+90 555 000 0003",
+      "hireDate": "2021-05-20",
+      "isActive": true,
+      "canApproveQuotes": false,
+      "email": "mehmet.demir@logistics.com",
+      "password": "$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi",
+      "role": "OPERATION"
+    },
+    {
+      "username": "ayse.filo",
+      "firstName": "Ayşe",
+      "lastName": "Kaya",
+      "department": "Filo",
+      "phone": "+90 555 000 0004",
+      "hireDate": "2021-07-15",
+      "isActive": true,
+      "canApproveQuotes": false,
+      "email": "ayse.kaya@logistics.com",
+      "password": "$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi",
+      "role": "FLEET"
+    },
+    {
+      "username": "fatma.gumruk",
+      "firstName": "Fatma",
+      "lastName": "Özkan",
+      "department": "Gümrük",
+      "phone": "+90 555 000 0005",
+      "hireDate": "2022-01-10",
+      "isActive": true,
+      "canApproveQuotes": false,
+      "email": "fatma.ozkan@logistics.com",
+      "password": "$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi",
+      "role": "OPERATION"
+    }
+  ],
+  "customers": [
+    {
+      "name": "ABC Lojistik A.Ş.",
+      "taxNo": "1234567890",
+      "contactName": "Ali Veli",
+      "phoneNumber": "+90 212 555 0101",
+      "address": "Maslak Mahallesi, Büyükdere Caddesi No:123, Sarıyer/İstanbul",
+      "isBlacklisted": false,
+      "isInLawsuit": false,
+      "creditLimit": 500000.00
+    },
+    {
+      "name": "XYZ Nakliyat Ltd. Şti.",
+      "taxNo": "0987654321",
+      "contactName": "Zeynep Kaya",
+      "phoneNumber": "+90 216 555 0202",
+      "address": "Kadıköy Mahallesi, Bağdat Caddesi No:456, Kadıköy/İstanbul",
+      "isBlacklisted": false,
+      "isInLawsuit": false,
+      "creditLimit": 300000.00
+    },
+    {
+      "name": "DEF İthalat İhracat A.Ş.",
+      "taxNo": "1122334455",
+      "contactName": "Mustafa Çelik",
+      "phoneNumber": "+90 232 555 0303",
+      "address": "Konak Mahallesi, Gazi Bulvarı No:789, Konak/İzmir",
+      "isBlacklisted": false,
+      "isInLawsuit": true,
+      "creditLimit": 200000.00
+    },
+    {
+      "name": "GHI Ticaret Ltd. Şti.",
+      "taxNo": "5566778899",
+      "contactName": "Elif Yılmaz",
+      "phoneNumber": "+90 312 555 0404",
+      "address": "Çankaya Mahallesi, Tunalı Hilmi Caddesi No:321, Çankaya/Ankara",
+      "isBlacklisted": true,
+      "isInLawsuit": false,
+      "creditLimit": 0.00
+    }
+  ],
+  "drivers": [
+    {
+      "firstName": "Hasan",
+      "lastName": "Yılmaz",
+      "licenseNo": "A123456789",
+      "licenseClass": "B+E",
+      "passportExpiry": "2025-12-31",
+      "visaExpiry": "2024-06-30",
+      "residencePermitExpiry": "2024-08-15",
+      "phoneNumber": "+90 555 100 0001",
+      "email": "hasan.yilmaz@email.com",
+      "isActive": true
+    },
+    {
+      "firstName": "İbrahim",
+      "lastName": "Demir",
+      "licenseNo": "B987654321",
+      "licenseClass": "C+E",
+      "passportExpiry": "2026-03-15",
+      "visaExpiry": "2024-09-20",
+      "residencePermitExpiry": "2024-11-10",
+      "phoneNumber": "+90 555 100 0002",
+      "email": "ibrahim.demir@email.com",
+      "isActive": true
+    },
+    {
+      "firstName": "Mehmet",
+      "lastName": "Kaya",
+      "licenseNo": "C456789123",
+      "licenseClass": "D+E",
+      "passportExpiry": "2025-08-20",
+      "visaExpiry": "2024-12-05",
+      "residencePermitExpiry": "2025-02-28",
+      "phoneNumber": "+90 555 100 0003",
+      "email": "mehmet.kaya@email.com",
+      "isActive": true
+    },
+    {
+      "firstName": "Ali",
+      "lastName": "Özkan",
+      "licenseNo": "D789123456",
+      "licenseClass": "C+E",
+      "passportExpiry": "2026-01-10",
+      "visaExpiry": "2024-07-25",
+      "residencePermitExpiry": "2024-10-15",
+      "phoneNumber": "+90 555 100 0004",
+      "email": "ali.ozkan@email.com",
+      "isActive": false
+    }
+  ],
+  "vehicles": [
+    {
+      "plateNo": "34 ABC 123",
+      "make": "Mercedes",
+      "model": "Actros",
+      "modelYear": 2022,
+      "purchaseDate": "2022-01-15",
+      "vin": "WDB9634561LA12345",
+      "isActive": true
+    },
+    {
+      "plateNo": "06 DEF 456",
+      "make": "Volvo",
+      "model": "FH",
+      "modelYear": 2021,
+      "purchaseDate": "2021-08-20",
+      "vin": "YV2A2A2A1HA123456",
+      "isActive": true
+    },
+    {
+      "plateNo": "35 GHI 789",
+      "make": "MAN",
+      "model": "TGX",
+      "modelYear": 2023,
+      "purchaseDate": "2023-03-10",
+      "vin": "WMA12345678901234",
+      "isActive": true
+    },
+    {
+      "plateNo": "07 JKL 012",
+      "make": "Scania",
+      "model": "R-Series",
+      "modelYear": 2020,
+      "purchaseDate": "2020-11-05",
+      "vin": "YS2K4X20001812345",
+      "isActive": false
+    }
+  ],
+  "trailers": [
+    {
+      "trailerNo": "TR-001",
+      "make": "Krone",
+      "model": "ProfiLiner",
+      "modelYear": 2022,
+      "purchaseDate": "2022-02-20",
+      "vin": "KR123456789012345",
+      "trailerType": "Container",
+      "capacity": 24.0,
+      "length": 13.6,
+      "width": 2.55,
+      "height": 2.7,
+      "isActive": true
+    },
+    {
+      "trailerNo": "TR-002",
+      "make": "Schmitz",
+      "model": "Cargobull",
+      "modelYear": 2021,
+      "purchaseDate": "2021-09-15",
+      "vin": "SC987654321098765",
+      "trailerType": "Flatbed",
+      "capacity": 26.0,
+      "length": 13.6,
+      "width": 2.55,
+      "height": 2.5,
+      "isActive": true
+    },
+    {
+      "trailerNo": "TR-003",
+      "make": "Kögel",
+      "model": "Light",
+      "modelYear": 2023,
+      "purchaseDate": "2023-01-25",
+      "vin": "KG456789123456789",
+      "trailerType": "Refrigerated",
+      "capacity": 22.0,
+      "length": 13.6,
+      "width": 2.55,
+      "height": 2.7,
+      "isActive": true
+    },
+    {
+      "trailerNo": "TR-004",
+      "make": "Lamberet",
+      "model": "Refrigerated",
+      "modelYear": 2020,
+      "purchaseDate": "2020-12-10",
+      "vin": "LB789123456789012",
+      "trailerType": "Refrigerated",
+      "capacity": 20.0,
+      "length": 13.6,
+      "width": 2.55,
+      "height": 2.6,
+      "isActive": false
+    }
+  ],
+  "orders": [
+    {
+      "orderNumber": "2401010000000001",
+      "departureCountry": "Turkey",
+      "departureCity": "İstanbul",
+      "departureDistrict": "Maslak",
+      "departurePostalCode": "34485",
+      "departureAddress": "Maslak Mahallesi, Büyükdere Caddesi No:123",
+      "departureContactName": "Ali Veli",
+      "departureContactPhone": "+90 212 555 0101",
+      "departureContactEmail": "ali.veli@abc.com",
+      "arrivalCountry": "Germany",
+      "arrivalCity": "Hamburg",
+      "arrivalDistrict": "HafenCity",
+      "arrivalPostalCode": "20457",
+      "arrivalAddress": "HafenCity, Überseeallee 10",
+      "arrivalContactName": "Hans Mueller",
+      "arrivalContactPhone": "+49 40 555 0101",
+      "arrivalContactEmail": "hans.mueller@logistics.de",
+      "cargoWidth": 2.4,
+      "cargoLength": 12.0,
+      "cargoHeight": 2.6,
+      "cargoWeightKg": 15000.0,
+      "cargoType": "Elektronik Eşya",
+      "canTransfer": true,
+      "quotePrice": 25000.00,
+      "actualPrice": 25000.00,
+      "supplyType": "OZMAL",
+      "tripNumber": "TR-2024-001",
+      "customsAddress": "Kapıkule Gümrük Müdürlüğü, Edirne",
+      "loadingDate": "2024-01-15",
+      "deadlineDate": "2024-01-25",
+      "estimatedArrivalDate": "2024-01-22",
+      "tripStatus": "YOLA_CIKTI"
+    },
+    {
+      "orderNumber": "2401010000000002",
+      "departureCountry": "Turkey",
+      "departureCity": "İzmir",
+      "departureDistrict": "Konak",
+      "departurePostalCode": "35250",
+      "departureAddress": "Konak Mahallesi, Gazi Bulvarı No:789",
+      "departureContactName": "Mustafa Çelik",
+      "departureContactPhone": "+90 232 555 0303",
+      "departureContactEmail": "mustafa.celik@def.com",
+      "arrivalCountry": "France",
+      "arrivalCity": "Paris",
+      "arrivalDistrict": "La Défense",
+      "arrivalPostalCode": "92000",
+      "arrivalAddress": "La Défense, Tour Total 1",
+      "arrivalContactName": "Pierre Dubois",
+      "arrivalContactPhone": "+33 1 55 55 0101",
+      "arrivalContactEmail": "pierre.dubois@logistics.fr",
+      "cargoWidth": 2.5,
+      "cargoLength": 13.0,
+      "cargoHeight": 2.7,
+      "cargoWeightKg": 18000.0,
+      "cargoType": "Tekstil Ürünleri",
+      "canTransfer": false,
+      "quotePrice": 32000.00,
+      "actualPrice": null,
+      "supplyType": "KIRALIK",
+      "tripNumber": null,
+      "customsAddress": "İpsala Gümrük Müdürlüğü, Edirne",
+      "loadingDate": "2024-02-01",
+      "deadlineDate": "2024-02-15",
+      "estimatedArrivalDate": "2024-02-12",
+      "tripStatus": "ONAYLANAN_TEKLIF"
+    },
+    {
+      "orderNumber": "2401010000000003",
+      "departureCountry": "Germany",
+      "departureCity": "Munich",
+      "departureDistrict": "Schwabing",
+      "departurePostalCode": "80801",
+      "departureAddress": "Schwabing, Leopoldstraße 100",
+      "departureContactName": "Klaus Weber",
+      "departureContactPhone": "+49 89 555 0202",
+      "departureContactEmail": "klaus.weber@import.de",
+      "arrivalCountry": "Turkey",
+      "arrivalCity": "Ankara",
+      "arrivalDistrict": "Çankaya",
+      "arrivalPostalCode": "06680",
+      "arrivalAddress": "Çankaya Mahallesi, Tunalı Hilmi Caddesi No:321",
+      "arrivalContactName": "Elif Yılmaz",
+      "arrivalContactPhone": "+90 312 555 0404",
+      "arrivalContactEmail": "elif.yilmaz@ghi.com",
+      "cargoWidth": 2.3,
+      "cargoLength": 11.5,
+      "cargoHeight": 2.5,
+      "cargoWeightKg": 12000.0,
+      "cargoType": "Makine Parçaları",
+      "canTransfer": true,
+      "quotePrice": 28000.00,
+      "actualPrice": 27500.00,
+      "supplyType": "OZMAL",
+      "tripNumber": "TR-2024-002",
+      "customsAddress": "Kapıkule Gümrük Müdürlüğü, Edirne",
+      "loadingDate": "2024-01-20",
+      "deadlineDate": "2024-02-05",
+      "estimatedArrivalDate": "2024-02-01",
+      "tripStatus": "TESLIM_EDILDI"
+    }
+  ]
+}
