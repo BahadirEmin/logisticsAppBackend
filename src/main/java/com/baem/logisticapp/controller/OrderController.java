@@ -125,12 +125,7 @@ public class OrderController {
     public ResponseEntity<byte[]> downloadDriverInformationDocument(
             @Parameter(description = "Order ID") @PathVariable Long orderId) {
 
-        // Order'ı bul
         OrderResponseDTO orderResponse = orderService.getOrderById(orderId);
-
-        // Order entity'sini al (DocumentService için)
-        // Bu kısmı OrderService'den entity döndüren bir method ekleyebiliriz
-        // Şimdilik basit bir çözüm uygulayalım
 
         try {
             // Word document'i oluştur
