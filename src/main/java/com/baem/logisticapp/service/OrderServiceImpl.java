@@ -476,4 +476,10 @@ public class OrderServiceImpl implements OrderService {
                 .map(this::convertToDTO)
                 .toList();
     }
+
+    @Override
+    public Order getOrderEntityById(Long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
+    }
 }

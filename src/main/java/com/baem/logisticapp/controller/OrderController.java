@@ -3,13 +3,16 @@ package com.baem.logisticapp.controller;
 import com.baem.logisticapp.dto.OrderCreateDTO;
 import com.baem.logisticapp.dto.OrderResponseDTO;
 import com.baem.logisticapp.dto.OrderUpdateDTO;
+import com.baem.logisticapp.service.DocumentService;
 import com.baem.logisticapp.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +25,7 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final DocumentService documentService;
 
     @PostMapping
     public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderCreateDTO createDTO) {
@@ -114,5 +118,31 @@ public class OrderController {
     public ResponseEntity<List<OrderResponseDTO>> getOrdersByOperationPerson(
             @Parameter(description = "Operation Person ID") @PathVariable Long operationPersonId) {
         return ResponseEntity.ok(orderService.getOrdersByOperationPerson(operationPersonId));
+    }
+
+    @GetMapping("/{orderId}/driver-information-document")
+    @Operation(summary = "Download driver information document", description = "Generate and download Word document with driver information for the order")
+    public ResponseEntity<byte[]> downloadDriverInformationDocument(
+            @Parameter(description = "Order ID") @PathVariable Long orderId) {
+
+        OrderResponseDTO orderResponse = orderService.getOrderById(orderId);
+
+        try {
+            // Word document'i oluştur
+            byte[] documentBytes = documentService.generateDriverInformationDocument(
+                    orderService.getOrderEntityById(orderId));
+
+            // Response headers'ı ayarla
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment",
+                    "driver_information_" + orderResponse.getOrderNumber() + ".docx");
+            headers.setContentLength(documentBytes.length);
+
+            return new ResponseEntity<>(documentBytes, headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

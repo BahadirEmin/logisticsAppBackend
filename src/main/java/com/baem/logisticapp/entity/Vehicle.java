@@ -31,6 +31,10 @@ public class Vehicle {
     @JoinColumn(name = "ownership_type_id")
     private VehicleOwnershipType ownershipType;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
+
     private LocalDate purchaseDate;
     private String vin;
 
