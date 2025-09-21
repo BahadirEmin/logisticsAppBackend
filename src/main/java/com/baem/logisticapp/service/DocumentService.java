@@ -29,30 +29,41 @@ public class DocumentService {
      */
     public byte[] generateDriverInformationDocument(Order order) {
         try {
+            log.info("Starting document generation for order: {}", order.getId());
+
             // Template dosyasını yükle
             Resource templateResource = new ClassPathResource(TEMPLATE_PATH);
+            log.info("Template path: {}", TEMPLATE_PATH);
 
             if (!templateResource.exists()) {
+                log.error("Template dosyası bulunamadı: {}", TEMPLATE_PATH);
                 throw new RuntimeException("Template dosyası bulunamadı: " + TEMPLATE_PATH);
             }
+
+            log.info("Template dosyası bulundu, boyut: {} bytes", templateResource.contentLength());
 
             // Word document'i aç
             try (InputStream templateStream = templateResource.getInputStream();
                     XWPFDocument document = new XWPFDocument(templateStream)) {
 
+                log.info("Word document açıldı, paragraf sayısı: {}", document.getParagraphs().size());
+
                 // Placeholder'ları değiştir
                 replacePlaceholders(document, order);
+                log.info("Placeholder'lar değiştirildi");
 
                 // Byte array'e çevir
                 try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                     document.write(outputStream);
-                    return outputStream.toByteArray();
+                    byte[] result = outputStream.toByteArray();
+                    log.info("Document başarıyla oluşturuldu, boyut: {} bytes", result.length);
+                    return result;
                 }
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Word document oluşturulurken hata oluştu: {}", e.getMessage(), e);
-            throw new RuntimeException("Word document oluşturulamadı", e);
+            throw new RuntimeException("Word document oluşturulamadı: " + e.getMessage(), e);
         }
     }
 
@@ -84,8 +95,14 @@ public class DocumentService {
             // Placeholder'ı değiştir
             String newText = paragraphText.replace("{{SURUCU}}", driverName);
 
-            // Paragrafı temizle ve yeni metni ekle
-            paragraph.getRuns().clear();
+            // Mevcut runs'ları kaldır ve yeni metni ekle
+            // getRuns() unmodifiable olduğu için önce listeye çevir
+            int runCount = paragraph.getRuns().size();
+            for (int i = runCount - 1; i >= 0; i--) {
+                paragraph.removeRun(i);
+            }
+
+            // Yeni run oluştur ve metni ekle
             XWPFRun run = paragraph.createRun();
             run.setText(newText);
         }
@@ -115,7 +132,13 @@ public class DocumentService {
             }
 
             if (!newText.equals(paragraphText)) {
-                paragraph.getRuns().clear();
+                // Mevcut runs'ları kaldır ve yeni metni ekle
+                int runCount = paragraph.getRuns().size();
+                for (int i = runCount - 1; i >= 0; i--) {
+                    paragraph.removeRun(i);
+                }
+
+                // Yeni run oluştur ve metni ekle
                 XWPFRun run = paragraph.createRun();
                 run.setText(newText);
             }

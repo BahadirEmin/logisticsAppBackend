@@ -3,6 +3,7 @@ package com.baem.logisticapp.controller;
 import com.baem.logisticapp.dto.OrderCreateDTO;
 import com.baem.logisticapp.dto.OrderResponseDTO;
 import com.baem.logisticapp.dto.OrderUpdateDTO;
+import com.baem.logisticapp.entity.Order;
 import com.baem.logisticapp.service.DocumentService;
 import com.baem.logisticapp.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
+@Slf4j
 @Tag(name = "Order Management", description = "Order management operations")
 public class OrderController {
 
@@ -125,12 +128,20 @@ public class OrderController {
     public ResponseEntity<byte[]> downloadDriverInformationDocument(
             @Parameter(description = "Order ID") @PathVariable Long orderId) {
 
-        OrderResponseDTO orderResponse = orderService.getOrderById(orderId);
-
         try {
+            log.info("Starting driver information document generation for order: {}", orderId);
+
+            OrderResponseDTO orderResponse = orderService.getOrderById(orderId);
+            log.info("Order found: {}", orderResponse.getOrderNumber());
+
+            Order orderEntity = orderService.getOrderEntityById(orderId);
+            log.info("Order entity retrieved, driver: {}",
+                    orderEntity.getAssignedDriver() != null ? orderEntity.getAssignedDriver().getFullName() : "null");
+
             // Word document'i oluştur
-            byte[] documentBytes = documentService.generateDriverInformationDocument(
-                    orderService.getOrderEntityById(orderId));
+            byte[] documentBytes = documentService.generateDriverInformationDocument(orderEntity);
+
+            log.info("Document generated successfully, size: {} bytes", documentBytes.length);
 
             // Response headers'ı ayarla
             HttpHeaders headers = new HttpHeaders();
@@ -142,6 +153,7 @@ public class OrderController {
             return new ResponseEntity<>(documentBytes, headers, HttpStatus.OK);
 
         } catch (Exception e) {
+            log.error("Error generating driver information document for order {}: {}", orderId, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
