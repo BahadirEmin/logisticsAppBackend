@@ -47,7 +47,13 @@ public class SecurityConfig {
                 "http://localhost:8080",
                 "http://127.0.0.1:3000",
                 "http://127.0.0.1:3001",
-                "http://127.0.0.1:5173"));
+                "http://127.0.0.1:5173",
+                // Tailscale IP aralığı (100.64.0.0/10) - daha spesifik pattern
+                "http://100.*.*.*:*",
+                "https://100.*.*.*:*",
+                // Spesifik Tailscale IP'niz için
+                "http://100.77.132.35:*",
+                "https://100.77.132.35:*"));
 
         // İzin verilen HTTP metodları
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
