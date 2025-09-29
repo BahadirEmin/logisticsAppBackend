@@ -6,10 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface CountryCodeRepository extends JpaRepository<CountryCode, Long> {
+
+    // Aktif ülkeleri alfabetik sıraya göre getir
+    List<CountryCode> findByIsActiveTrueOrderByCountryNameAsc();
 
     // İngilizce ülke ismine göre arama
     Optional<CountryCode> findByCountryNameIgnoreCaseAndIsActiveTrue(String countryName);
