@@ -40,4 +40,14 @@ public interface DriverRepository extends JpaRepository<Driver, Long> {
            "(:active IS NULL OR d.isActive = :active)")
     List<Driver> findDriversWithFilters(@Param("licenseNo") String licenseNo,
                                        @Param("active") Boolean active);
+
+    // Statistics methods
+    @Query("SELECT COUNT(d) FROM Driver d")
+    Integer countAll();
+
+    @Query("SELECT COUNT(d) FROM Driver d WHERE d.isActive = true")
+    Integer countByStatus(@Param("status") String status);
+
+    @Query("SELECT COUNT(d) FROM Driver d WHERE d.isActive = true")
+    Integer countByActiveTrue();
 }

@@ -43,4 +43,14 @@ public interface TrailerRepository extends JpaRepository<Trailer, Long> {
                                         @Param("maxCapacity") Double maxCapacity,
                                         @Param("active") Boolean active,
                                         @Param("purchasedAfter") LocalDate purchasedAfter);
+
+    // Statistics methods
+    @Query("SELECT COUNT(t) FROM Trailer t")
+    Integer countAll();
+
+    @Query("SELECT COUNT(t) FROM Trailer t WHERE t.isActive = true")
+    Integer countByStatus(@Param("status") String status);
+
+    @Query("SELECT COUNT(t) FROM Trailer t WHERE t.isActive = true")
+    Integer countByActiveTrue();
 }
