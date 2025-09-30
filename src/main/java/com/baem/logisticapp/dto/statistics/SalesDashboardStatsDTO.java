@@ -11,10 +11,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SalesDashboardStatsDTO {
     
+    private TotalStatsDTO totalStats;
     private MonthlyStatsDTO monthlyStats;
     private StatusBreakdownDTO statusBreakdown;
     private FinancialDTO financial;
     private Integer needsOperatorAssignment;
+    
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TotalStatsDTO {
+        private Integer totalOffers;
+        private Integer thisMonth;
+    }
     
     @Data
     @Builder

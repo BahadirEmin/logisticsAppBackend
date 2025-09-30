@@ -66,4 +66,12 @@ public class StatisticsController {
             @RequestParam(defaultValue = "false") Boolean unreadOnly) {
         return ResponseEntity.ok(statisticsService.getDashboardNotifications(userId, unreadOnly));
     }
+
+    @GetMapping("/offers/recent")
+    @Operation(summary = "Get recent offers", description = "Returns recent offers list")
+    public ResponseEntity<RecentOffersDTO> getRecentOffers(
+            @Parameter(description = "Maximum number of offers to return")
+            @RequestParam(defaultValue = "10") Integer limit) {
+        return ResponseEntity.ok(statisticsService.getRecentOffers(limit));
+    }
 }

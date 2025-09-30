@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -69,8 +70,18 @@ public class StatisticsService {
         OffsetDateTime startOfThisMonth = now.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
         OffsetDateTime startOfLastMonth = startOfThisMonth.minusMonths(1);
 
-        // Monthly stats
+        // Monthly orders count
         int thisMonthOrders = orderRepository.countByCreatedDateBetween(startOfThisMonth, now);
+
+        // Total stats
+        int totalOffers = orderRepository.countAll();
+        
+        var totalStats = SalesDashboardStatsDTO.TotalStatsDTO.builder()
+                .totalOffers(totalOffers)
+                .thisMonth(thisMonthOrders)
+                .build();
+
+        // Monthly stats
         int lastMonthOrders = orderRepository.countByCreatedDateBetween(startOfLastMonth, startOfThisMonth);
         double growth = lastMonthOrders > 0 ? (double) (thisMonthOrders - lastMonthOrders) / lastMonthOrders : 0.0;
 
@@ -95,6 +106,7 @@ public class StatisticsService {
                 .build();
 
         return SalesDashboardStatsDTO.builder()
+                .totalStats(totalStats)
                 .monthlyStats(monthlyStats)
                 .statusBreakdown(statusBreakdown)
                 .financial(financial)
@@ -186,6 +198,43 @@ public class StatisticsService {
         return notifications.stream()
                 .filter(notification -> !Boolean.TRUE.equals(unreadOnly) || !notification.getRead())
                 .toList();
+    }
+
+    public RecentOffersDTO getRecentOffers(Integer limit) {
+        log.info("Getting recent offers with limit: {}", limit);
+        
+        // Mock data for now - in real implementation, you would get from orders
+        List<RecentOffersDTO.OfferDTO> offers = new ArrayList<>();
+        
+        offers.add(RecentOffersDTO.OfferDTO.builder()
+                .id(1L)
+                .customerName("ABC Ltd.")
+                .departureCity("İstanbul")
+                .arrivalCity("Ankara")
+                .estimatedPrice(new java.math.BigDecimal("15000"))
+                .currency("TRY")
+                .status("approved")
+                .createdAt(OffsetDateTime.now().minusHours(2))
+                .build());
+                
+        offers.add(RecentOffersDTO.OfferDTO.builder()
+                .id(2L)
+                .customerName("XYZ Şirketi")
+                .departureCity("Ankara")
+                .arrivalCity("İzmir")
+                .estimatedPrice(new java.math.BigDecimal("12000"))
+                .currency("TRY")
+                .status("pending")
+                .createdAt(OffsetDateTime.now().minusHours(4))
+                .build());
+
+        List<RecentOffersDTO.OfferDTO> limitedOffers = offers.stream()
+                .limit(limit != null ? limit : 10)
+                .toList();
+
+        return RecentOffersDTO.builder()
+                .offers(limitedOffers)
+                .build();
     }
 
     private double calculateSuccessRate() {
