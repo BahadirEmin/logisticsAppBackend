@@ -43,4 +43,14 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
                                         @Param("ownershipTypeId") Long ownershipTypeId,
                                         @Param("active") Boolean active,
                                         @Param("purchasedAfter") LocalDate purchasedAfter);
+
+    // Statistics methods
+    @Query("SELECT COUNT(v) FROM Vehicle v")
+    Integer countAll();
+
+    @Query("SELECT COUNT(v) FROM Vehicle v WHERE v.isActive = true")
+    Integer countByStatus(@Param("status") String status);
+
+    @Query("SELECT COUNT(v) FROM Vehicle v WHERE v.isActive = true")
+    Integer countByActiveTrue();
 }

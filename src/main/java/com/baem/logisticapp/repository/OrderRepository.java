@@ -70,4 +70,37 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // Order number ile sipariş bulma (benzersizlik kontrolü için)
     Optional<Order> findByOrderNumber(String orderNumber);
+
+    // Statistics methods
+    @Query("SELECT COUNT(o) FROM Order o")
+    Integer countAll();
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE CAST(o.tripStatus AS string) = :status")
+    Integer countByStatus(@Param("status") String status);
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.createdAt >= :startDate AND o.createdAt < :endDate")
+    Integer countByCreatedDateBetween(@Param("startDate") java.time.OffsetDateTime startDate, 
+                                     @Param("endDate") java.time.OffsetDateTime endDate);
+
+    @Query("SELECT COALESCE(SUM(o.quotePrice), 0) FROM Order o")
+    Double sumTotalAmount();
+
+    @Query("SELECT COALESCE(SUM(o.quotePrice), 0) FROM Order o WHERE o.createdAt >= :startDate AND o.createdAt < :endDate")
+    Double sumTotalAmountByCreatedDateBetween(@Param("startDate") java.time.OffsetDateTime startDate, 
+                                            @Param("endDate") java.time.OffsetDateTime endDate);
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE CAST(o.tripStatus AS string) = :status AND o.operationPerson IS NULL")
+    Integer countByStatusAndAssignedOperatorIsNull(@Param("status") String status);
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.updatedAt >= :startDate AND o.updatedAt < :endDate AND CAST(o.tripStatus AS string) = :status")
+    Integer countByStatusAndCompletedDateBetween(@Param("status") String status, 
+                                               @Param("startDate") java.time.OffsetDateTime startDate, 
+                                               @Param("endDate") java.time.OffsetDateTime endDate);
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.estimatedArrivalDate < CURRENT_DATE AND o.tripStatus != 'COMPLETED'")
+    Integer countDelayed();
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.updatedAt >= :startDate AND o.updatedAt < :endDate")
+    Integer countByAssignedDateBetween(@Param("startDate") java.time.OffsetDateTime startDate, 
+                                     @Param("endDate") java.time.OffsetDateTime endDate);
 }
