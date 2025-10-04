@@ -1,9 +1,11 @@
 package com.baem.logisticapp.controller;
 
+import com.baem.logisticapp.dto.AssignmentHistoryDTO;
 import com.baem.logisticapp.dto.OrderCreateDTO;
 import com.baem.logisticapp.dto.OrderResponseDTO;
 import com.baem.logisticapp.dto.OrderUpdateDTO;
 import com.baem.logisticapp.entity.Order;
+import com.baem.logisticapp.service.AssignmentHistoryService;
 import com.baem.logisticapp.service.DocumentService;
 import com.baem.logisticapp.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +31,7 @@ public class OrderController {
 
     private final OrderService orderService;
     private final DocumentService documentService;
+    private final AssignmentHistoryService assignmentHistoryService;
 
     @PostMapping
     public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderCreateDTO createDTO) {
@@ -154,6 +157,22 @@ public class OrderController {
 
         } catch (Exception e) {
             log.error("Error generating driver information document for order {}: {}", orderId, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/{orderId}/assignment-history")
+    @Operation(summary = "Get assignment history", description = "Retrieve assignment history for the specified order")
+    public ResponseEntity<List<AssignmentHistoryDTO>> getAssignmentHistory(
+            @Parameter(description = "Order ID") @PathVariable Long orderId) {
+        try {
+            // Sipariş var mı kontrol et
+            orderService.getOrderById(orderId); // Bu exception fırlatır sipariş yoksa
+            
+            List<AssignmentHistoryDTO> history = assignmentHistoryService.getAssignmentHistory(orderId);
+            return ResponseEntity.ok(history);
+            
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

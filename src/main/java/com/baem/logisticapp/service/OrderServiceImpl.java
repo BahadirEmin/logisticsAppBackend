@@ -27,6 +27,7 @@ public class OrderServiceImpl implements OrderService {
     private final DriverRepository driverRepository;
     private final CountryCodeRepository countryCodeRepository;
     private final OrderValidator orderValidator;
+    private final AssignmentHistoryService assignmentHistoryService;
 
     @Override
     public OrderResponseDTO createOrder(OrderCreateDTO createDTO) {
@@ -187,8 +188,20 @@ public class OrderServiceImpl implements OrderService {
         User operationPerson = userRepository.findById(operationPersonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Operation person not found"));
 
+        String previousValue = order.getOperationPerson() != null ? order.getOperationPerson().getFullName() : null;
         order.setOperationPerson(operationPerson);
         order.setUpdatedAt(OffsetDateTime.now());
+
+        // Log assignment history
+        String assignedBy = "System"; // TODO: Spring Security'den al
+        Long assignedById = 1L; // TODO: Gerçek kullanıcı ID'si al
+        
+        assignmentHistoryService.logPersonnelAssignment(
+            orderId, OrderAssignmentHistory.ResourceType.OPERATION_PERSON,
+            operationPersonId, operationPerson.getFullName(), 
+            assignedBy, assignedById, previousValue, 
+            "Operasyoncu ataması yapıldı"
+        );
 
         return convertToDTO(orderRepository.save(order));
     }
@@ -201,8 +214,20 @@ public class OrderServiceImpl implements OrderService {
         User fleetPerson = userRepository.findById(fleetPersonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Fleet person not found"));
 
+        String previousValue = order.getFleetPerson() != null ? order.getFleetPerson().getFullName() : null;
         order.setFleetPerson(fleetPerson);
         order.setUpdatedAt(OffsetDateTime.now());
+
+        // Log assignment history
+        String assignedBy = "System"; // TODO: Spring Security'den al
+        Long assignedById = 1L; // TODO: Gerçek kullanıcı ID'si al
+        
+        assignmentHistoryService.logPersonnelAssignment(
+            orderId, OrderAssignmentHistory.ResourceType.FLEET_PERSON,
+            fleetPersonId, fleetPerson.getFullName(), 
+            assignedBy, assignedById, previousValue, 
+            "Filocu ataması yapıldı"
+        );
 
         return convertToDTO(orderRepository.save(order));
     }
@@ -446,25 +471,55 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
 
+        String assignedBy = "System"; // TODO: Spring Security'den al
+        Long assignedById = 1L; // TODO: Gerçek kullanıcı ID'si al
+
         // Vehicle assignment
         if (vehicleId != null) {
             Vehicle vehicle = vehicleRepository.findById(vehicleId)
                     .orElseThrow(() -> new RuntimeException("Vehicle not found with id: " + vehicleId));
+            
+            String previousValue = order.getAssignedTruck() != null ? order.getAssignedTruck().getPlateNo() : null;
             order.setAssignedTruck(vehicle);
+            
+            // Log assignment history
+            assignmentHistoryService.logVehicleAssignment(
+                orderId, vehicleId, vehicle.getPlateNo(), 
+                assignedBy, assignedById, previousValue, 
+                "Filocu tarafından araç ataması yapıldı"
+            );
         }
 
         // Trailer assignment
         if (trailerId != null) {
             Trailer trailer = trailerRepository.findById(trailerId)
                     .orElseThrow(() -> new RuntimeException("Trailer not found with id: " + trailerId));
+            
+            String previousValue = order.getAssignedTrailer() != null ? order.getAssignedTrailer().getTrailerNo() : null;
             order.setAssignedTrailer(trailer);
+            
+            // Log assignment history
+            assignmentHistoryService.logTrailerAssignment(
+                orderId, trailerId, trailer.getTrailerNo(), 
+                assignedBy, assignedById, previousValue, 
+                "Filocu tarafından römork ataması yapıldı"
+            );
         }
 
         // Driver assignment
         if (driverId != null) {
             Driver driver = driverRepository.findById(driverId)
                     .orElseThrow(() -> new RuntimeException("Driver not found with id: " + driverId));
+            
+            String previousValue = order.getAssignedDriver() != null ? order.getAssignedDriver().getFullName() : null;
             order.setAssignedDriver(driver);
+            
+            // Log assignment history
+            assignmentHistoryService.logDriverAssignment(
+                orderId, driverId, driver.getFullName(), 
+                assignedBy, assignedById, previousValue, 
+                "Filocu tarafından şoför ataması yapıldı"
+            );
         }
 
         return convertToDTO(orderRepository.save(order));
