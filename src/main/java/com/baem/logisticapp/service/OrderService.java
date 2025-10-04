@@ -23,9 +23,9 @@ public interface OrderService {
                         Long operationPersonId,
                         String tripStatus);
 
-        OrderResponseDTO assignToOperation(Long orderId, Long operationPersonId);
+        OrderResponseDTO assignToOperation(Long orderId, Long operationPersonId, Long assignedByUserId);
 
-        OrderResponseDTO assignToFleet(Long orderId, Long fleetPersonId);
+        OrderResponseDTO assignToFleet(Long orderId, Long fleetPersonId, Long assignedByUserId);
 
         // Yeni metodlar
         OrderResponseDTO approveQuote(Long orderId, Long approverUserId);
@@ -35,7 +35,7 @@ public interface OrderService {
         OrderResponseDTO assignToOperationByOperation(Long orderId, Long newOperationPersonId,
                         Long currentOperationPersonId);
 
-        OrderResponseDTO assignFleet(Long orderId, Long vehicleId, Long trailerId, Long driverId);
+        OrderResponseDTO assignFleet(Long orderId, Long vehicleId, Long trailerId, Long driverId, Long assignedByUserId);
 
         List<OrderResponseDTO> getOrdersByOperationPerson(Long operationPersonId);
 

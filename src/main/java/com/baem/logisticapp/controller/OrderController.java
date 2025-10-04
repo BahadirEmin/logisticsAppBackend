@@ -75,15 +75,17 @@ public class OrderController {
     @PostMapping("/{orderId}/assign-operation")
     public ResponseEntity<OrderResponseDTO> assignToOperation(
             @PathVariable Long orderId,
-            @RequestParam Long operationPersonId) {
-        return ResponseEntity.ok(orderService.assignToOperation(orderId, operationPersonId));
+            @RequestParam Long operationPersonId,
+            @RequestParam Long assignedByUserId) {
+        return ResponseEntity.ok(orderService.assignToOperation(orderId, operationPersonId, assignedByUserId));
     }
 
     @PostMapping("/{orderId}/assign-fleet")
     public ResponseEntity<OrderResponseDTO> assignToFleet(
             @PathVariable Long orderId,
-            @RequestParam Long fleetPersonId) {
-        return ResponseEntity.ok(orderService.assignToFleet(orderId, fleetPersonId));
+            @RequestParam Long fleetPersonId,
+            @RequestParam Long assignedByUserId) {
+        return ResponseEntity.ok(orderService.assignToFleet(orderId, fleetPersonId, assignedByUserId));
     }
 
     @PostMapping("/{orderId}/approve-quote")
@@ -115,8 +117,36 @@ public class OrderController {
             @Parameter(description = "Order ID") @PathVariable Long orderId,
             @Parameter(description = "Vehicle ID (optional)") @RequestParam(required = false) Long vehicleId,
             @Parameter(description = "Trailer ID (optional)") @RequestParam(required = false) Long trailerId,
-            @Parameter(description = "Driver ID (optional)") @RequestParam(required = false) Long driverId) {
-        return ResponseEntity.ok(orderService.assignFleet(orderId, vehicleId, trailerId, driverId));
+            @Parameter(description = "Driver ID (optional)") @RequestParam(required = false) Long driverId,
+            @Parameter(description = "Fleet Person ID who is making the assignment") @RequestParam Long assignedByUserId) {
+        return ResponseEntity.ok(orderService.assignFleet(orderId, vehicleId, trailerId, driverId, assignedByUserId));
+    }
+
+    @PostMapping("/{orderId}/assign-vehicle")
+    @Operation(summary = "Assign vehicle to order", description = "Assign only a vehicle to an order")
+    public ResponseEntity<OrderResponseDTO> assignVehicle(
+            @Parameter(description = "Order ID") @PathVariable Long orderId,
+            @Parameter(description = "Vehicle ID") @RequestParam Long vehicleId,
+            @Parameter(description = "Fleet Person ID who is making the assignment") @RequestParam Long assignedByUserId) {
+        return ResponseEntity.ok(orderService.assignFleet(orderId, vehicleId, null, null, assignedByUserId));
+    }
+
+    @PostMapping("/{orderId}/assign-trailer")
+    @Operation(summary = "Assign trailer to order", description = "Assign only a trailer to an order")
+    public ResponseEntity<OrderResponseDTO> assignTrailer(
+            @Parameter(description = "Order ID") @PathVariable Long orderId,
+            @Parameter(description = "Trailer ID") @RequestParam Long trailerId,
+            @Parameter(description = "Fleet Person ID who is making the assignment") @RequestParam Long assignedByUserId) {
+        return ResponseEntity.ok(orderService.assignFleet(orderId, null, trailerId, null, assignedByUserId));
+    }
+
+    @PostMapping("/{orderId}/assign-driver")
+    @Operation(summary = "Assign driver to order", description = "Assign only a driver to an order")
+    public ResponseEntity<OrderResponseDTO> assignDriver(
+            @Parameter(description = "Order ID") @PathVariable Long orderId,
+            @Parameter(description = "Driver ID") @RequestParam Long driverId,
+            @Parameter(description = "Fleet Person ID who is making the assignment") @RequestParam Long assignedByUserId) {
+        return ResponseEntity.ok(orderService.assignFleet(orderId, null, null, driverId, assignedByUserId));
     }
 
     @GetMapping("/operation-person/{operationPersonId}")

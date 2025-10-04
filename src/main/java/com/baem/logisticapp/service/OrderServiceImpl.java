@@ -181,25 +181,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponseDTO assignToOperation(Long orderId, Long operationPersonId) {
+    public OrderResponseDTO assignToOperation(Long orderId, Long operationPersonId, Long assignedByUserId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
         User operationPerson = userRepository.findById(operationPersonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Operation person not found"));
 
+        User assignedByUser = userRepository.findById(assignedByUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("Assigned by user not found"));
+
         String previousValue = order.getOperationPerson() != null ? order.getOperationPerson().getFullName() : null;
         order.setOperationPerson(operationPerson);
         order.setUpdatedAt(OffsetDateTime.now());
 
         // Log assignment history
-        String assignedBy = "System"; // TODO: Spring Security'den al
-        Long assignedById = 1L; // TODO: Gerçek kullanıcı ID'si al
-        
         assignmentHistoryService.logPersonnelAssignment(
             orderId, OrderAssignmentHistory.ResourceType.OPERATION_PERSON,
             operationPersonId, operationPerson.getFullName(), 
-            assignedBy, assignedById, previousValue, 
+            assignedByUser.getFullName(), assignedByUserId, previousValue, 
             "Operasyoncu ataması yapıldı"
         );
 
@@ -207,25 +207,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponseDTO assignToFleet(Long orderId, Long fleetPersonId) {
+    public OrderResponseDTO assignToFleet(Long orderId, Long fleetPersonId, Long assignedByUserId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
         User fleetPerson = userRepository.findById(fleetPersonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Fleet person not found"));
 
+        User assignedByUser = userRepository.findById(assignedByUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("Assigned by user not found"));
+
         String previousValue = order.getFleetPerson() != null ? order.getFleetPerson().getFullName() : null;
         order.setFleetPerson(fleetPerson);
         order.setUpdatedAt(OffsetDateTime.now());
 
         // Log assignment history
-        String assignedBy = "System"; // TODO: Spring Security'den al
-        Long assignedById = 1L; // TODO: Gerçek kullanıcı ID'si al
-        
         assignmentHistoryService.logPersonnelAssignment(
             orderId, OrderAssignmentHistory.ResourceType.FLEET_PERSON,
             fleetPersonId, fleetPerson.getFullName(), 
-            assignedBy, assignedById, previousValue, 
+            assignedByUser.getFullName(), assignedByUserId, previousValue, 
             "Filocu ataması yapıldı"
         );
 
@@ -467,12 +467,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponseDTO assignFleet(Long orderId, Long vehicleId, Long trailerId, Long driverId) {
+    public OrderResponseDTO assignFleet(Long orderId, Long vehicleId, Long trailerId, Long driverId, Long assignedByUserId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
 
-        String assignedBy = "System"; // TODO: Spring Security'den al
-        Long assignedById = 1L; // TODO: Gerçek kullanıcı ID'si al
+        // Atamayı yapan kullanıcıyı al
+        User assignedByUser = userRepository.findById(assignedByUserId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + assignedByUserId));
+
+        String assignedBy = assignedByUser.getFullName();
+        Long assignedById = assignedByUserId;
 
         // Vehicle assignment
         if (vehicleId != null) {
