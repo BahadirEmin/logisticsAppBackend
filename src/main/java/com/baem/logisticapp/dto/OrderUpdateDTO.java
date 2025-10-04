@@ -53,6 +53,7 @@ public class OrderUpdateDTO {
     // Araç atamaları
     private Long assignedTruckId;
     private Long assignedTrailerId;
+    private Long assignedDriverId;
 
     // Gümrük bilgileri
     private String customsAddress;

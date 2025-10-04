@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -131,6 +132,13 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
 
+        // Mevcut değerleri sakla (assignment history için)
+        String oldDriverName = order.getAssignedDriver() != null ? order.getAssignedDriver().getFullName() : null;
+        String oldVehiclePlate = order.getAssignedTruck() != null ? order.getAssignedTruck().getPlateNo() : null;
+        String oldTrailerNo = order.getAssignedTrailer() != null ? order.getAssignedTrailer().getTrailerNo() : null;
+        String oldOperationPersonName = order.getOperationPerson() != null ? order.getOperationPerson().getUsername() : null;
+        String oldFleetPersonName = order.getFleetPerson() != null ? order.getFleetPerson().getUsername() : null;
+
         // Customer'ı güncelle
         if (updateDTO.getCustomerId() != null) {
             Customer customer = customerRepository.findById(updateDTO.getCustomerId())
@@ -149,7 +157,95 @@ public class OrderServiceImpl implements OrderService {
         updateOrderFields(order, updateDTO);
         order.setUpdatedAt(OffsetDateTime.now());
 
-        return convertToDTO(orderRepository.save(order));
+        Order savedOrder = orderRepository.save(order);
+
+        // Assignment history'yi logla (filocu ID 3 sabit olarak)
+        Long assignedByUserId = 3L; // Filocu ID
+        String assignedByName = "fleet"; // Filocu username
+
+        // Driver assignment değişimi kontrol et
+        if (updateDTO.getAssignedDriverId() != null) {
+            String newDriverName = savedOrder.getAssignedDriver() != null ? savedOrder.getAssignedDriver().getFullName() : null;
+            if (!Objects.equals(oldDriverName, newDriverName)) {
+                assignmentHistoryService.logDriverAssignment(
+                    savedOrder.getId(), 
+                    savedOrder.getAssignedDriver().getId(), 
+                    newDriverName, 
+                    assignedByName, 
+                    assignedByUserId, 
+                    oldDriverName, 
+                    "Filocu tarafından şoför ataması yapıldı"
+                );
+            }
+        }
+
+        // Vehicle assignment değişimi kontrol et
+        if (updateDTO.getAssignedTruckId() != null) {
+            String newVehiclePlate = savedOrder.getAssignedTruck() != null ? savedOrder.getAssignedTruck().getPlateNo() : null;
+            if (!Objects.equals(oldVehiclePlate, newVehiclePlate)) {
+                assignmentHistoryService.logVehicleAssignment(
+                    savedOrder.getId(), 
+                    savedOrder.getAssignedTruck().getId(), 
+                    newVehiclePlate, 
+                    assignedByName, 
+                    assignedByUserId, 
+                    oldVehiclePlate, 
+                    "Filocu tarafından araç ataması yapıldı"
+                );
+            }
+        }
+
+        // Trailer assignment değişimi kontrol et
+        if (updateDTO.getAssignedTrailerId() != null) {
+            String newTrailerNo = savedOrder.getAssignedTrailer() != null ? savedOrder.getAssignedTrailer().getTrailerNo() : null;
+            if (!Objects.equals(oldTrailerNo, newTrailerNo)) {
+                assignmentHistoryService.logTrailerAssignment(
+                    savedOrder.getId(), 
+                    savedOrder.getAssignedTrailer().getId(), 
+                    newTrailerNo, 
+                    assignedByName, 
+                    assignedByUserId, 
+                    oldTrailerNo, 
+                    "Filocu tarafından römork ataması yapıldı"
+                );
+            }
+        }
+
+        // Operation person assignment değişimi kontrol et
+        if (updateDTO.getOperationPersonId() != null) {
+            String newOperationPersonName = savedOrder.getOperationPerson() != null ? savedOrder.getOperationPerson().getUsername() : null;
+            if (!Objects.equals(oldOperationPersonName, newOperationPersonName)) {
+                assignmentHistoryService.logPersonnelAssignment(
+                    savedOrder.getId(), 
+                    OrderAssignmentHistory.ResourceType.OPERATION_PERSON, 
+                    savedOrder.getOperationPerson().getId(), 
+                    newOperationPersonName, 
+                    assignedByName, 
+                    assignedByUserId, 
+                    oldOperationPersonName, 
+                    "Operasyoncu ataması yapıldı"
+                );
+            }
+        }
+
+        // Fleet person assignment değişimi kontrol et
+        if (updateDTO.getFleetPersonId() != null) {
+            String newFleetPersonName = savedOrder.getFleetPerson() != null ? savedOrder.getFleetPerson().getUsername() : null;
+            if (!Objects.equals(oldFleetPersonName, newFleetPersonName)) {
+                assignmentHistoryService.logPersonnelAssignment(
+                    savedOrder.getId(), 
+                    OrderAssignmentHistory.ResourceType.FLEET_PERSON, 
+                    savedOrder.getFleetPerson().getId(), 
+                    newFleetPersonName, 
+                    assignedByName, 
+                    assignedByUserId, 
+                    oldFleetPersonName, 
+                    "Filocu ataması yapıldı"
+                );
+            }
+        }
+
+        return convertToDTO(savedOrder);
     }
 
     @Override
@@ -405,6 +501,50 @@ public class OrderServiceImpl implements OrderService {
             order.setEstimatedArrivalDate(updateDTO.getEstimatedArrivalDate());
         if (updateDTO.getTripStatus() != null)
             order.setTripStatus(updateDTO.getTripStatus());
+
+        // Personel atamaları
+        if (updateDTO.getSalesPersonId() != null) {
+            User salesPerson = userRepository.findById(updateDTO.getSalesPersonId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Sales person not found"));
+            order.setSalesPerson(salesPerson);
+        }
+        
+        if (updateDTO.getOperationPersonId() != null) {
+            User operationPerson = userRepository.findById(updateDTO.getOperationPersonId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Operation person not found"));
+            order.setOperationPerson(operationPerson);
+        }
+        
+        if (updateDTO.getFleetPersonId() != null) {
+            User fleetPerson = userRepository.findById(updateDTO.getFleetPersonId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Fleet person not found"));
+            order.setFleetPerson(fleetPerson);
+        }
+        
+        if (updateDTO.getCustomsPersonId() != null) {
+            User customsPerson = userRepository.findById(updateDTO.getCustomsPersonId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Customs person not found"));
+            order.setCustomsPerson(customsPerson);
+        }
+
+        // Araç atamaları
+        if (updateDTO.getAssignedTruckId() != null) {
+            Vehicle truck = vehicleRepository.findById(updateDTO.getAssignedTruckId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
+            order.setAssignedTruck(truck);
+        }
+        
+        if (updateDTO.getAssignedTrailerId() != null) {
+            Trailer trailer = trailerRepository.findById(updateDTO.getAssignedTrailerId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Trailer not found"));
+            order.setAssignedTrailer(trailer);
+        }
+        
+        if (updateDTO.getAssignedDriverId() != null) {
+            Driver driver = driverRepository.findById(updateDTO.getAssignedDriverId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
+            order.setAssignedDriver(driver);
+        }
     }
 
     private OrderResponseDTO convertToDTO(Order order) {
